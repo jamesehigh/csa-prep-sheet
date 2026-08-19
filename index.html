@@ -475,7 +475,12 @@
   var saveTimer = null;
   function saveNow(){
     if(!storageOK) return;
-    try{ window.localStorage.setItem(STORE, JSON.stringify(answers)); }
+    try{
+      window.localStorage.setItem(STORE, JSON.stringify(answers));
+      if(typeof assignment !== "undefined" && assignment.fbc && assignment.franchise){
+        saveScopeLocal(assignment.fbc, assignment.franchise);
+      }
+    }
     catch(e){
       storageOK = false;
       setFootWarning();
@@ -521,6 +526,34 @@
 
   function saveAssignmentLocal(){ lsSet(SELECTION_STORE, JSON.stringify(assignment)); }
 
+  function scopeStoreKey(fbc, franchise){
+    return STORE + "::scope::" + encodeURIComponent(fbc) + "::" + encodeURIComponent(franchise);
+  }
+
+  function saveScopeLocal(fbc, franchise){
+    if(!fbc || !franchise) return;
+    lsSet(scopeStoreKey(fbc, franchise), JSON.stringify(answers));
+  }
+
+  function loadScopeLocal(fbc, franchise){
+    if(!fbc || !franchise) return {};
+    try{
+      var saved = JSON.parse(lsGet(scopeStoreKey(fbc, franchise)) || "{}");
+      return saved && typeof saved === "object" && !Array.isArray(saved) ? saved : {};
+    }catch(e){ return {}; }
+  }
+
+  function showScopeAnswers(nextAnswers){
+    QUESTIONS.forEach(function(item){
+      answers[item.n] = typeof nextAnswers[item.n] === "string" ? nextAnswers[item.n]
+                      : typeof nextAnswers[String(item.n)] === "string" ? nextAnswers[String(item.n)] : "";
+      if(nodes[item.n]) nodes[item.n].ta.value = answers[item.n];
+    });
+    saveNow();
+    refreshAll();
+    drawReview();
+  }
+
   function fillFranchises(){
     var select = document.getElementById("franchiseSelect");
     if(!select) return;
@@ -552,18 +585,9 @@
     fbcSelect.value = fbcMap[assignment.fbc] ? assignment.fbc : "";
     if(!fbcSelect.value){ assignment.fbc = ""; assignment.franchise = ""; }
     fillFranchises();
-    fbcSelect.addEventListener("change", function(){
-      assignment.fbc = fbcSelect.value;
-      assignment.franchise = "";
-      saveAssignmentLocal();
-      fillFranchises();
-      sharedSaveField("fbc", assignment.fbc);
-      sharedSaveField("franchise", "");
-    });
+    fbcSelect.addEventListener("change", function(){ switchAssignment(fbcSelect.value, ""); });
     franchiseSelect.addEventListener("change", function(){
-      assignment.franchise = franchiseSelect.value;
-      saveAssignmentLocal();
-      sharedSaveField("franchise", assignment.franchise);
+      switchAssignment(assignment.fbc, franchiseSelect.value);
     });
   }
 
@@ -574,6 +598,46 @@
     var fbcSelect = document.getElementById("fbcSelect");
     if(fbcSelect) fbcSelect.value = assignment.fbc;
     fillFranchises();
+  }
+
+  var assignmentSwitching = false;
+  var preserveUnscopedOnNextFranchise = !assignment.fbc && !assignment.franchise && answeredCount() > 0;
+  function switchAssignment(nextFbc, nextFranchise){
+    var oldFbc = assignment.fbc;
+    var oldFranchise = assignment.franchise;
+    var oldComplete = !!(oldFbc && oldFranchise);
+    var nextComplete = !!(nextFbc && nextFranchise);
+    if(oldFbc === nextFbc && oldFranchise === nextFranchise) return;
+
+    assignmentSwitching = true;
+    if(!nextFranchise){
+      preserveUnscopedOnNextFranchise = !oldComplete && answeredCount() > 0;
+    }
+    if(oldComplete){ saveScopeLocal(oldFbc, oldFranchise); }
+    var saveOld = oldComplete ? sharedSaveAll() : Promise.resolve();
+    saveOld.then(function(){
+      applyAssignment(nextFbc, nextFranchise);
+      sharedLastUpdate = 0;
+      if(oldComplete){
+        showScopeAnswers(nextComplete ? loadScopeLocal(nextFbc, nextFranchise) : {});
+      }
+      return sharedSetAssignment(nextFbc, nextFranchise);
+    }).then(function(){
+      if(!nextComplete) return;
+      if(!oldComplete){
+        if(preserveUnscopedOnNextFranchise){
+          preserveUnscopedOnNextFranchise = false;
+          saveScopeLocal(nextFbc, nextFranchise);
+          return sharedSaveAll();
+        }
+        showScopeAnswers(loadScopeLocal(nextFbc, nextFranchise));
+        return fetchShared(true);
+      }
+      return fetchShared(true);
+    }).finally(function(){
+      assignmentSwitching = false;
+      toast(nextComplete ? "Loaded responses for " + nextFranchise : "Select a franchise to load its responses");
+    });
   }
 
   /* A stable id for this prep sheet, so the external list updates one row
@@ -1551,7 +1615,13 @@
 
   function sharedSaveQuestion(n, value){
     if(!sharedId) return;
-    sharedRequest("PUT", { id:sharedId, question:n, answer:String(value || "") })
+    sharedRequest("PUT", {
+      id:sharedId,
+      fbc:assignment.fbc,
+      franchise:assignment.franchise,
+      question:n,
+      answer:String(value || "")
+    })
       .then(function(res){ if(!res.ok) throw new Error("save"); return res.json(); })
       .then(function(data){ sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0); updateShareUI("Shared ✓"); })
       .catch(function(){ updateShareUI("Save pending"); });
@@ -1560,6 +1630,14 @@
   function sharedSaveField(field, value){
     if(!sharedId) return;
     sharedRequest("PUT", { id:sharedId, field:field, value:String(value || "") })
+      .then(function(res){ if(!res.ok) throw new Error("save"); return res.json(); })
+      .then(function(data){ sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0); updateShareUI("Shared ✓"); })
+      .catch(function(){ updateShareUI("Save pending"); });
+  }
+
+  function sharedSetAssignment(fbc, franchise){
+    if(!sharedId) return Promise.resolve();
+    return sharedRequest("PUT", { id:sharedId, field:"assignment", fbc:fbc, franchise:franchise })
       .then(function(res){ if(!res.ok) throw new Error("save"); return res.json(); })
       .then(function(data){ sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0); updateShareUI("Shared ✓"); })
       .catch(function(){ updateShareUI("Save pending"); });
@@ -1591,14 +1669,15 @@
     });
     sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0);
     saveNow();
+    if(assignment.fbc && assignment.franchise) saveScopeLocal(assignment.fbc, assignment.franchise);
     refreshAll();
     drawReview();
     updateShareUI("Shared ✓");
   }
 
   function fetchShared(showError){
-    if(!sharedId) return;
-    sharedRequest("GET")
+    if(!sharedId || (assignmentSwitching && !showError)) return Promise.resolve();
+    return sharedRequest("GET")
       .then(function(res){
         if(res.status === 404) throw new Error("missing");
         if(!res.ok) throw new Error("load");
