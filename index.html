@@ -536,6 +536,11 @@
   function lsGet(k){ try{ return window.localStorage.getItem(k); }catch(e){ return null; } }
   function lsSet(k,v){ try{ window.localStorage.setItem(k,v); return true; }catch(e){ return false; } }
   function lsDel(k){ try{ window.localStorage.removeItem(k); }catch(e){} }
+  /* The active FBC/franchise is a viewing choice, not shared sheet data.
+     Keep it per browser tab so two people/tabs using the Master link cannot
+     change which record the other tab restores after a refresh. */
+  function ssGet(k){ try{ return window.sessionStorage.getItem(k); }catch(e){ return null; } }
+  function ssSet(k,v){ try{ window.sessionStorage.setItem(k,v); return true; }catch(e){ return false; } }
 
   var answers = load();
 
@@ -552,7 +557,7 @@
   });
   var assignment = (function(){
     try{
-      var saved = JSON.parse(lsGet(SELECTION_STORE) || "null");
+      var saved = JSON.parse(ssGet(SELECTION_STORE) || "null");
       if(saved && typeof saved === "object") return {
         fbc:typeof saved.fbc === "string" ? saved.fbc : "",
         franchise:typeof saved.franchise === "string" ? saved.franchise : ""
@@ -561,7 +566,7 @@
     return { fbc:"", franchise:"" };
   })();
 
-  function saveAssignmentLocal(){ lsSet(SELECTION_STORE, JSON.stringify(assignment)); }
+  function saveAssignmentLocal(){ ssSet(SELECTION_STORE, JSON.stringify(assignment)); }
 
   function scopeStoreKey(fbc, franchise){
     return STORE + "::scope::" + encodeURIComponent(fbc) + "::" + encodeURIComponent(franchise);
