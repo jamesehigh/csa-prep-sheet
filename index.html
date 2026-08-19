@@ -178,6 +178,14 @@
   }
   .qbtn:hover{background:#fafcfe}
   .qbtn:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  #cards.questions-locked .card,.fbc-notes.notes-locked{opacity:.58;box-shadow:none}
+  #cards.questions-locked .qbtn{cursor:not-allowed}
+  #cards.questions-locked .qbtn:hover{background:#fff}
+  .selection-gate{
+    margin:14px 0 12px;padding:12px 15px;border:1px solid #c9d9e6;border-radius:9px;
+    background:#f4f8fb;color:var(--navy);font-size:14px;font-weight:600;
+  }
+  .selection-gate[hidden]{display:none}
   .num{
     flex:0 0 34px;height:34px;border-radius:9px;display:grid;place-items:center;
     background:var(--accent-soft);color:var(--navy);font-weight:700;font-size:14.5px;
@@ -402,6 +410,7 @@
       <button type="button" class="btn ghost" id="franchiseLinkBtn">Create Franchise Link</button>
     </div>
   </section>
+  <p class="selection-gate" id="selectionGate">Select an FBC and franchise to open Questions 1–12 and FBC Notes.</p>
   <h2 class="visually-hidden">The 12 questions</h2>
   <div id="cards"></div>
   <section class="fbc-notes" aria-labelledby="fbcNotesLabel">
@@ -646,6 +655,7 @@
     fillFranchises();
     if(franchiseAccessToken) lockFranchiseSelection();
     updateFranchiseLinkUI();
+    updateQuestionAccess();
   }
 
   var assignmentSwitching = false;
@@ -658,6 +668,7 @@
     if(oldFbc === nextFbc && oldFranchise === nextFranchise) return;
 
     assignmentSwitching = true;
+    updateQuestionAccess();
     if(oldComplete){ saveScopeLocal(oldFbc, oldFranchise); }
     var saveOld = oldComplete ? sharedSaveAll() : Promise.resolve();
     saveOld.then(function(){
@@ -667,6 +678,8 @@
       return nextComplete ? fetchShared(true) : Promise.resolve();
     }).finally(function(){
       assignmentSwitching = false;
+      updateQuestionAccess();
+      if(nextComplete && openN === null) openCard(1, { focus:false });
       toast(nextComplete ? "Loaded responses for " + nextFranchise : "Select a franchise to load its responses");
     });
   }
@@ -899,8 +912,39 @@
     QUESTIONS.forEach(function(item){ refresh(item.n); });
   }
 
+  function recordSelected(){
+    return !!(assignment.fbc && assignment.franchise);
+  }
+  function updateQuestionAccess(){
+    var unlocked = recordSelected() && !assignmentSwitching;
+    var gate = document.getElementById("selectionGate");
+    if(gate) gate.hidden = unlocked;
+    if(cardsEl) cardsEl.classList.toggle("questions-locked", !unlocked);
+    QUESTIONS.forEach(function(item){
+      var node = nodes[item.n];
+      if(!node) return;
+      node.btn.disabled = !unlocked;
+      node.btn.setAttribute("aria-disabled", String(!unlocked));
+      node.ta.disabled = !unlocked;
+      if(!unlocked){
+        node.card.classList.remove("open");
+        node.btn.setAttribute("aria-expanded", "false");
+      }
+    });
+    if(fbcNotesEl){
+      fbcNotesEl.disabled = !unlocked;
+      if(fbcNotesEl.parentNode) fbcNotesEl.parentNode.classList.toggle("notes-locked", !unlocked);
+    }
+    if(!unlocked) openN = null;
+  }
+
   function openCard(n, opts){
     if(n < 1 || n > TOTAL) return;
+    if(!recordSelected() || assignmentSwitching){
+      updateQuestionAccess();
+      toast("Select an FBC and franchise to open the questions");
+      return;
+    }
     if(openN !== null && nodes[openN]){
       nodes[openN].card.classList.remove("open");
       nodes[openN].btn.setAttribute("aria-expanded", "false");
@@ -1934,6 +1978,7 @@
   showScopeAnswers(assignment.fbc && assignment.franchise
     ? loadScopeLocal(assignment.fbc, assignment.franchise)
     : {});
+  updateQuestionAccess();
   if(!storageOK) setFootWarning();
 
   var firstOpen = 1;
@@ -1941,7 +1986,7 @@
     if(!val(QUESTIONS[i].n)){ firstOpen = QUESTIONS[i].n; break; }
     if(i === TOTAL - 1) firstOpen = TOTAL;
   }
-  openCard(firstOpen, { focus:false });
+  if(recordSelected()) openCard(firstOpen, { focus:false });
 
   /* pagehide is the reliable one — mobile browsers freeze or discard pages
      without ever firing beforeunload, which quietly lost the last few words. */
