@@ -345,9 +345,6 @@
     <div class="meter">
       <div class="meter-top">
         <span id="stat">Question 1 of 12</span>
-        <button type="button" class="sync-pill" id="syncPill" data-state="off" title="Connected · COM/OPS Collaboration — click to change">
-          <span class="sync-dot" aria-hidden="true"></span><span id="syncText">Not connected</span>
-        </button>
         <b id="pct">0% complete</b>
       </div>
       <div class="track" role="progressbar" aria-label="Questions answered" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0"><div class="fill" id="fill"></div></div>
@@ -407,7 +404,7 @@
 
   /* Baked-in connection. "Download app (share)" rewrites this line so the copy
      you hand out is pre-connected. Do not reformat this line. */
-  var SYNC_DEFAULTS={"url":"https://gocerta-my.sharepoint.com/my","secret":"","team":"COM/OPS Collaboration","mode":"live","stamp":1786750445729}; /*__SYNC_DEFAULTS__*/
+  var SYNC_DEFAULTS={"url":"","secret":"","team":"","mode":"live","stamp":0}; /*__SYNC_DEFAULTS__*/
 
   /* ---------- Storage (survives file:// and private-mode blocks) ---------- */
   var storageOK = true;
@@ -748,22 +745,12 @@
       reviewRows[item.n] = a;
     });
 
-    var note = document.createElement("p");
-    note.className = "sync-note";
-    note.id = "syncNote";
-    note.hidden = true;
-    note.textContent = "Live sync is on — your answers are shared with your FBC as you write them.";
-    reviewEl.insertBefore(note, reviewEl.children[2] || null);
-
     var bar = document.createElement("div");
     bar.className = "bar";
 
     bar.appendChild(mkBtn("btn primary", "Download answers", downloadAnswers));
     bar.appendChild(mkBtn("btn ghost", "Copy all", copyAll));
     bar.appendChild(mkBtn("btn ghost", "Print / save as PDF", printSheet));
-    var cb = mkBtn("btn ghost", syncOn() ? "SharePoint sync ✓" : "Connect to SharePoint", openSyncModal);
-    cb.id = "connectBtn";
-    bar.appendChild(cb);
     bar.appendChild(mkBtn("btn ghost", "Export data (.json)", exportData));
     bar.appendChild(mkBtn("btn ghost", "Import data", function(){
       var f = document.getElementById("importFile");
@@ -1076,7 +1063,7 @@
     return cfg;
   }
   function saveSyncConfig(){ lsSet(SYNC_KEY, JSON.stringify(sync.cfg)); }
-  function syncOn(){ return !!(sync.cfg.enabled && /^https?:\/\//i.test(sync.cfg.url)); }
+  function syncOn(){ return false; }
 
   function readOutbox(){
     try{
