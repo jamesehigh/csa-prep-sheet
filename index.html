@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<meta name="theme-color" content="#0f2f4a">
+<meta name="description" content="CSA Opportunity Prep — 12 questions to complete before a coaching or strategy conversation.">
+<title>CSA Opportunity Prep — 12 Questions</title>
+<style>
+  :root{
+    --navy:#0f2f4a;
+    --navy-soft:#17466c;
+    --accent:#1d7ac4;
+    --accent-soft:#e8f2fb;
+    --gold:#c8912a;
+    --ink:#12202b;
+    --muted:#5d6f7d;
+    --line:#dfe6ec;
+    --bg:#f4f7fa;
+    --ok:#17795e;
+    --ok-soft:#e6f4ef;
+    --shadow:0 1px 2px rgba(16,40,60,.06), 0 8px 24px rgba(16,40,60,.07);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px 80px}
+  .visually-hidden{
+    position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+    overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+  }
+
+  /* ---------- Header ---------- */
+  header.top{
+    position:relative;
+    min-height:378px;
+    color:#fff;
+    margin-bottom:26px;
+    border-radius:0 0 24px 24px;
+    background:linear-gradient(109deg,#0c2a41 0%,#103750 42%,#1a5379 100%);
+  }
+  header.top .header-shell{
+    display:flex;
+    flex-direction:column;
+    min-height:378px;
+    max-width:1100px;
+    margin:0 auto;
+    padding:28px 23px 0;
+  }
+  .header-row{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:nowrap;
+  }
+  .header-brand{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    min-width:0;
+  }
+  .csa-badge{
+    flex:0 0 auto;
+    width:52px;
+    height:36px;
+    display:grid;
+    place-items:center;
+    border:1px solid #6f8da2;
+    border-radius:6px;
+    color:#fff;
+    font-size:14px;
+    font-weight:800;
+    letter-spacing:.16em;
+    line-height:1;
+  }
+  .brand-title{
+    color:#fff;
+    font-size:16px;
+    font-weight:800;
+    letter-spacing:.12em;
+    line-height:1;
+    white-space:nowrap;
+  }
+  .header-logo{
+    width:332px;
+    max-width:60vw;
+    height:auto;
+    display:block;
+    margin-top:-14px;
+  }
+  .strategy-label{
+    margin:44px 0 0;
+    color:#96d2ff;
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:16px;
+    line-height:1;
+    font-weight:800;
+    letter-spacing:.15em;
+    text-transform:uppercase;
+  }
+  header.top h1{
+    margin:18px 0 0;
+    color:#fff;
+    font-size:clamp(30px,4.2vw,48px);
+    line-height:1.08;
+    font-weight:400;
+    letter-spacing:-1.35px;
+    text-wrap:balance;
+  }
+  header.top .sub{
+    max-width:855px;
+    margin:16px 0 0;
+    color:#fff;
+    font-size:clamp(17px,1.7vw,21px);
+    line-height:1.58;
+    font-weight:400;
+  }
+  header.top .meter{
+    margin-top:auto;
+    padding:26px 0 0;
+  }
+  header.top .meter-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:12px;
+    margin:0 0 10px;
+    color:#fff;
+    font-size:16px;
+    line-height:1.2;
+  }
+  header.top .meter-top b{color:#fff;font-size:16px;font-weight:800;white-space:nowrap}
+  header.top .track{
+    height:10px;
+    border-radius:99px;
+    background:#416f90;
+    overflow:hidden;
+  }
+  header.top .fill{
+    height:100%;
+    width:0%;
+    border-radius:99px;
+    background:linear-gradient(90deg,#4aa3e0,#8fd0c0);
+    transition:width .35s ease;
+  }
+  @media (max-width:760px){
+    header.top,header.top .header-shell{min-height:0}
+    header.top{border-radius:0 0 20px 20px}
+    header.top .header-shell{padding:22px 20px 0}
+    .header-row{flex-direction:column-reverse;align-items:stretch;gap:14px}
+    .header-logo{margin-top:0;margin-left:auto;width:250px}
+    .strategy-label{margin-top:30px}
+    header.top h1{margin-top:14px}
+  }
+  @media (max-width:520px){
+    .brand-title{font-size:13px}
+    .strategy-label{font-size:13px}
+    .header-logo{max-width:72vw}
+  }
+
+  /* ---------- Cards ---------- */
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    margin-bottom:10px;box-shadow:var(--shadow);overflow:hidden;
+    transition:border-color .18s ease, box-shadow .18s ease;
+  }
+  .card.open{border-color:#bcd9f0;box-shadow:0 2px 4px rgba(16,40,60,.06),0 14px 34px rgba(16,40,60,.12)}
+  .qbtn{
+    all:unset;display:flex;gap:14px;align-items:flex-start;
+    width:100%;padding:16px 18px;cursor:pointer;box-sizing:border-box;
+  }
+  .qbtn:hover{background:#fafcfe}
+  .qbtn:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .num{
+    flex:0 0 34px;height:34px;border-radius:9px;display:grid;place-items:center;
+    background:var(--accent-soft);color:var(--navy);font-weight:700;font-size:14.5px;
+  }
+  .card.done .num{background:var(--ok-soft);color:var(--ok)}
+  .qmid{flex:1 1 auto;min-width:0}
+  .qtext{display:block;font-size:16px;font-weight:600;color:var(--ink);margin:5px 0 0;letter-spacing:-.1px}
+  .tags{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+  .tag{font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:99px}
+  .tag.key{background:#fdf3e0;color:var(--gold)}
+  .tag.ans{background:var(--ok-soft);color:var(--ok)}
+  .tag.todo{background:#eef2f6;color:var(--muted)}
+  .preview{display:block;margin:7px 0 0;font-size:13.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card.open .preview,.preview:empty{display:none}
+  .chev{flex:0 0 auto;color:#9fb1bf;margin-top:8px;transition:transform .2s ease}
+  .card.open .chev{transform:rotate(180deg)}
+
+  .panel{display:none;padding:2px 18px 18px 66px;border-top:1px solid #eef2f6}
+  .card.open .panel{display:block}
+  .hint{margin:14px 0 10px;font-size:13.5px;color:var(--muted);border-left:3px solid var(--accent-soft);padding-left:11px}
+  textarea{
+    width:100%;min-height:132px;resize:vertical;padding:13px 14px;
+    border:1px solid var(--line);border-radius:9px;background:#fcfdfe;
+    font:15.5px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    color:var(--ink);
+  }
+  textarea:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(29,122,196,.13)}
+  .row{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .btn{
+    all:unset;cursor:pointer;font-weight:600;font-size:14.5px;
+    padding:10px 18px;border-radius:8px;box-sizing:border-box;text-align:center;
+  }
+  .btn.primary{background:var(--accent);color:#fff}
+  .btn.primary:hover{background:#1668a8}
+  .btn.ghost{color:var(--muted);border:1px solid var(--line);background:#fff}
+  .btn.ghost:hover{color:var(--ink);border-color:#c6d2dc}
+  .btn:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+  .kbd{margin-left:auto;font-size:12.5px;color:#93a3b0}
+
+  /* ---------- Review ---------- */
+  .review{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:26px 26px 22px;margin-top:8px}
+  .review h2{margin:0 0 4px;font-size:21px;letter-spacing:-.2px}
+  .review .lead{margin:0 0 20px;color:var(--muted);font-size:14.5px}
+  .qa{padding:14px 0;border-top:1px solid #eef2f6}
+  .qa:first-of-type{border-top:none}
+  .qa .q{font-size:13px;font-weight:700;color:var(--navy);margin:0 0 5px}
+  .qa .a{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px}
+  .qa .a.empty{color:#a4b1bc;font-style:italic}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+  .foot{margin:26px 0 0;font-size:12.5px;color:#93a3b0;text-align:center}
+  .foot.warn{color:#a8632a;font-weight:600}
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);
+    background:var(--navy);color:#fff;padding:11px 18px;border-radius:99px;font-size:14px;
+    box-shadow:0 10px 30px rgba(16,40,60,.28);opacity:0;pointer-events:none;transition:.22s ease;
+    max-width:calc(100vw - 40px);text-align:center;z-index:50;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  /* ---------- Sync ---------- */
+  .sync-pill{
+    all:unset;box-sizing:border-box;
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:12.5px;font-weight:700;color:#bcd9ee;
+    background:rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.20);
+    border-radius:99px;padding:3px 12px 3px 10px;
+    cursor:pointer;line-height:1.6;white-space:nowrap;
+  }
+  .sync-pill:hover{background:rgba(255,255,255,.19)}
+  .sync-pill:focus-visible{outline:2px solid #96d2ff;outline-offset:2px}
+  .sync-dot{width:8px;height:8px;border-radius:50%;background:#7f9bad;flex:0 0 auto}
+  .sync-pill[data-state="synced"]{color:#a8ecd0}
+  .sync-pill[data-state="synced"] .sync-dot{background:#3fcf95}
+  .sync-pill[data-state="sending"]{color:#ffe6ad}
+  .sync-pill[data-state="sending"] .sync-dot{background:#f0b429;animation:syncPulse 1s ease-in-out infinite}
+  .sync-pill[data-state="unconfirmed"]{color:#ffe6ad}
+  .sync-pill[data-state="unconfirmed"] .sync-dot{background:#f0b429}
+  .sync-pill[data-state="queued"]{color:#ffcfc2}
+  .sync-pill[data-state="queued"] .sync-dot{background:#ef8163}
+  @keyframes syncPulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .sync-note{
+    margin:0 0 14px;padding:11px 15px;border-radius:9px;
+    background:var(--ok-soft);border-left:3px solid #4bbd93;
+    color:#125c47;font-size:13.5px;
+  }
+  .modal-back{
+    position:fixed;inset:0;z-index:80;background:rgba(9,28,44,.55);
+    display:flex;align-items:flex-start;justify-content:center;
+    padding:40px 18px;overflow:auto;
+  }
+  .modal{
+    background:#fff;border-radius:14px;box-shadow:0 30px 80px rgba(6,26,45,.34);
+    width:min(640px,100%);padding:28px 30px 24px;
+  }
+  .modal h2{margin:0 0 6px;color:var(--navy);font-size:23px;letter-spacing:-.3px}
+  .modal .modal-sub{margin:0 0 20px;color:var(--muted);font-size:14.5px;line-height:1.55}
+  .fld{margin:0 0 16px}
+  .fld label{display:block;font-size:14.5px;font-weight:700;color:var(--ink);margin:0 0 4px}
+  .fld .fhelp{display:block;font-size:13px;color:var(--muted);margin:0 0 8px;line-height:1.45}
+  .fld input[type=text],.fld select{
+    width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;
+    background:#fcfdfe;color:var(--ink);font:15px/1.5 inherit;box-sizing:border-box;
+  }
+  .fld select{height:44px}
+  .fld input:focus,.fld select:focus{
+    outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(29,122,196,.13)
+  }
+  .fld-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .modal-warn{
+    margin:0 0 18px;padding:11px 15px;border-radius:9px;
+    background:#fdf1ec;border-left:3px solid #d3714f;color:#7d4130;font-size:13.5px;
+  }
+  .modal-foot{
+    display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    border-top:1px solid var(--line);padding-top:16px;
+  }
+  .modal-foot>div{display:flex;gap:9px;flex-wrap:wrap}
+  .btn.danger{color:#9b4537;border:1px solid #e8c2b8;background:#fff6f3}
+  .btn.danger:hover{background:#ffeee9}
+  .tres{margin:0 0 16px;padding:11px 14px;border-radius:9px;font-size:13.5px;line-height:1.45;
+    background:var(--accent-soft);color:#1a5480;border-left:3px solid var(--accent)}
+  .tres.ok{background:var(--ok-soft);color:#125c47;border-left-color:#4bbd93}
+  .tres.bad{background:#fdf1ec;color:#7d4130;border-left-color:#d3714f}
+  @media (max-width:520px){ .fld-row{grid-template-columns:1fr} }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+  }
+  @media print{
+    header.top,.bar,.kbd,.toast,#cards,.foot,.modal-back,.sync-note{display:none!important}
+    body{background:#fff}
+    .wrap{max-width:none;padding:0}
+    .review{border:none;box-shadow:none;padding:0;margin:0}
+    .review[hidden]{display:block!important}
+    .qa{break-inside:avoid;page-break-inside:avoid}
+    .print-head{display:block!important;margin:0 0 18px}
+    .print-head h1{margin:0 0 4px;font-size:22px;color:var(--navy)}
+    .print-head p{margin:0;font-size:12.5px;color:var(--muted)}
+    @page{margin:14mm}
+  }
+  .print-head{display:none}
+  @media (max-width:620px){
+    .panel{padding-left:18px}
+    .review{padding:20px 18px 18px}
+    .kbd{display:none}
+    .bar .btn{flex:1 1 auto}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="header-shell">
+    <div class="header-row">
+      <div class="header-brand">
+        <div class="csa-badge">CSA</div>
+        <div class="brand-title">OPPORTUNITY PREP</div>
+      </div>
+      <img class="header-logo" alt="CertaPro Painters" src="data:image/png;base64,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">
+    </div>
+    <p class="strategy-label">CUSTOMER STRATEGY ASSESSMENT</p>
+    <h1>Turn an open estimate into a clear next step.</h1>
+    <p class="sub">Complete these 12 questions before your coaching or strategy conversation. Your work saves automatically on this device.</p>
+    <div class="meter">
+      <div class="meter-top">
+        <span id="stat">Question 1 of 12</span>
+        <button type="button" class="sync-pill" id="syncPill" data-state="off" title="Connected · COM/OPS Collaboration — click to change">
+          <span class="sync-dot" aria-hidden="true"></span><span id="syncText">Not connected</span>
+        </button>
+        <b id="pct">0% complete</b>
+      </div>
+      <div class="track" role="progressbar" aria-label="Questions answered" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0"><div class="fill" id="fill"></div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="print-head" id="printHead"></div>
+  <h2 class="visually-hidden">The 12 questions</h2>
+  <div id="cards"></div>
+  <section id="review" class="review" aria-live="polite" hidden=""></section>
+  <p class="foot" id="foot">Answers save automatically in this browser.</p>
+</div>
+
+<input type="file" id="importFile" accept="application/json,.json" class="visually-hidden" aria-hidden="true" tabindex="-1">
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var QUESTIONS = [
+    { n:1,  key:false, q:"What is the project, scope and estimate amount?",
+      hint:"Name the building/site, the work involved, and the dollar figure on the estimate." },
+    { n:2,  key:false, q:"Who has been involved in conversations about this opportunity?",
+      hint:"Everyone on both sides — customer contacts, our team, architects, engineers, brokers." },
+    { n:3,  key:false, q:"What did the customer say in the last meaningful conversation about this opportunity, and when?",
+      hint:"Their words, not your read on it. Include the date and how the conversation happened." },
+    { n:4,  key:true,  q:"Why is the customer doing the project, and why now?",
+      hint:"The driver behind it — damage, code, tenant, sale, insurance, expansion — and what makes the timing urgent." },
+    { n:5,  key:false, q:"What matters most to the customer when choosing a contractor?",
+      hint:"Price, schedule, references, safety record, single point of contact, past relationship?" },
+    { n:6,  key:true,  q:"Who is the primary contact, who decides, and who else matters?",
+      hint:"Separate the day-to-day contact from the person who signs, plus any influencer who can stall it." },
+    { n:7,  key:true,  q:"What has to happen on the customer's side before the work can be awarded?",
+      hint:"Board vote, budget approval, insurance settlement, permits, other bids, lease sign-off." },
+    { n:8,  key:true,  q:"What is known about budget/funding, competition, and how the customer will choose?",
+      hint:"Where the money comes from, who else is bidding, and the selection process they described." },
+    { n:9,  key:true,  q:"What timing has the CUSTOMER communicated for the project or decision?",
+      hint:"Dates the customer gave you — not dates we hope for." },
+    { n:10, key:true,  q:"What has the customer already done that shows this is a real opportunity?",
+      hint:"Site walks, drawings shared, funds allocated, other trades engaged, paperwork started." },
+    { n:11, key:true,  q:"What has the CUSTOMER said will happen next?",
+      hint:"The next action in their own words." },
+    { n:12, key:true,  q:"Who owns that next step, and when did the CUSTOMER say it will happen?",
+      hint:"A name and a date. If neither exists yet, say so plainly." }
+  ];
+
+  var TOTAL = QUESTIONS.length;
+  var STORE = "csa-prep-answers-v1";
+  var META_STORE = "csa-prep-meta-v1";
+  var SYNC_KEY = "csa-prep-sync-config-v1";
+  var OUTBOX_KEY = "csa-prep-sync-outbox-v1";
+  var SCHEMA_VERSION = 1;
+  var APP_NAME = "CSA Opportunity Prep";
+
+  /* Baked-in connection. "Download app (share)" rewrites this line so the copy
+     you hand out is pre-connected. Do not reformat this line. */
+  var SYNC_DEFAULTS={"url":"https://gocerta-my.sharepoint.com/my","secret":"","team":"COM/OPS Collaboration","mode":"live","stamp":1786750445729}; /*__SYNC_DEFAULTS__*/
+
+  /* ---------- Storage (survives file:// and private-mode blocks) ---------- */
+  var storageOK = true;
+  function testStorage(){
+    try{
+      var k = "__csa_test__";
+      window.localStorage.setItem(k, "1");
+      window.localStorage.removeItem(k);
+      return true;
+    }catch(e){ return false; }
+  }
+  storageOK = testStorage();
+
+  function load(){
+    if(!storageOK) return {};
+    try{
+      var raw = window.localStorage.getItem(STORE);
+      if(!raw) return {};
+      var obj = JSON.parse(raw);
+      return (obj && typeof obj === "object" && !Array.isArray(obj)) ? obj : {};
+    }catch(e){ return {}; }
+  }
+  var saveTimer = null;
+  function saveNow(){
+    if(!storageOK) return;
+    try{ window.localStorage.setItem(STORE, JSON.stringify(answers)); }
+    catch(e){
+      storageOK = false;
+      setFootWarning();
+    }
+  }
+  function save(){
+    if(saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveNow, 250);
+  }
+  function setFootWarning(){
+    var f = document.getElementById("foot");
+    f.className = "foot warn";
+    f.textContent = "This browser is blocking automatic saving. Use “Download answers” before you close this page.";
+  }
+
+  /* ---------- Small storage helpers shared by meta / sync ---------- */
+  function lsGet(k){ try{ return window.localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k,v){ try{ window.localStorage.setItem(k,v); return true; }catch(e){ return false; } }
+  function lsDel(k){ try{ window.localStorage.removeItem(k); }catch(e){} }
+
+  var answers = load();
+
+  /* A stable id for this prep sheet, so the external list updates one row
+     rather than piling up duplicates. New sheet on "Start over". */
+  var meta = (function(){
+    try{
+      var m = JSON.parse(lsGet(META_STORE) || "null");
+      if(m && typeof m === "object" && typeof m.prepId === "string" && m.prepId) return m;
+    }catch(e){}
+    return { prepId:"" };
+  })();
+  function uuid(){
+    try{
+      if(window.crypto && typeof window.crypto.randomUUID === "function") return window.crypto.randomUUID();
+      if(window.crypto && window.crypto.getRandomValues){
+        var b = new Uint8Array(16), h = [], i;
+        window.crypto.getRandomValues(b);
+        b[6] = (b[6] & 0x0f) | 0x40; b[8] = (b[8] & 0x3f) | 0x80;
+        for(i = 0; i < 16; i++) h.push((b[i] + 0x100).toString(16).slice(1));
+        return h.slice(0,4).join("") + "-" + h.slice(4,6).join("") + "-" + h.slice(6,8).join("") +
+               "-" + h.slice(8,10).join("") + "-" + h.slice(10,16).join("");
+      }
+    }catch(e){}
+    return "p-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,10);
+  }
+  function prepId(){
+    if(!meta.prepId){
+      meta.prepId = uuid();
+      lsSet(META_STORE, JSON.stringify(meta));
+    }
+    return meta.prepId;
+  }
+
+  var openN = null;
+  var cardsEl = document.getElementById("cards");
+  var reviewEl = document.getElementById("review");
+  var nodes = {}; /* n -> {card, btn, num, tagWrap, preview, panel, ta} */
+
+  function val(n){
+    var v = answers[n];
+    return (typeof v === "string") ? v.trim() : "";
+  }
+  function answeredCount(){
+    var c = 0;
+    for(var i=0;i<TOTAL;i++){ if(val(QUESTIONS[i].n)) c++; }
+    return c;
+  }
+
+  /* ---------- Build the cards once, then only update state ---------- */
+  function build(){
+    var frag = document.createDocumentFragment();
+
+    QUESTIONS.forEach(function(item){
+      var isLast = item.n === TOTAL;
+
+      var card = document.createElement("div");
+      card.className = "card";
+
+      var btn = document.createElement("button");
+      btn.className = "qbtn";
+      btn.type = "button";
+      btn.id = "qbtn-" + item.n;
+      btn.setAttribute("aria-expanded", "false");
+      btn.setAttribute("aria-controls", "panel-" + item.n);
+
+      var num = document.createElement("span");
+      num.className = "num";
+      num.textContent = String(item.n);
+
+      var mid = document.createElement("span");
+      mid.className = "qmid";
+
+      var qtext = document.createElement("span");
+      qtext.className = "qtext";
+      qtext.textContent = item.q;
+
+      var tags = document.createElement("span");
+      tags.className = "tags";
+      if(item.key){
+        var kt = document.createElement("span");
+        kt.className = "tag key";
+        kt.textContent = "★ Priority";
+        tags.appendChild(kt);
+      }
+      var state = document.createElement("span");
+      state.className = "tag todo";
+      state.textContent = "Not answered";
+      tags.appendChild(state);
+
+      var preview = document.createElement("span");
+      preview.className = "preview";
+
+      mid.appendChild(qtext);
+      mid.appendChild(tags);
+      mid.appendChild(preview);
+
+      var chev = document.createElement("span");
+      chev.className = "chev";
+      chev.textContent = "▼";
+      chev.setAttribute("aria-hidden", "true");
+
+      btn.appendChild(num);
+      btn.appendChild(mid);
+      btn.appendChild(chev);
+      btn.addEventListener("click", function(){ toggle(item.n); });
+      card.appendChild(btn);
+
+      var panel = document.createElement("div");
+      panel.className = "panel";
+      panel.id = "panel-" + item.n;
+      panel.setAttribute("role", "region");
+      panel.setAttribute("aria-labelledby", "qbtn-" + item.n);
+
+      var hint = document.createElement("p");
+      hint.className = "hint";
+      hint.id = "hint-" + item.n;
+      hint.textContent = item.hint;
+
+      var label = document.createElement("label");
+      label.className = "visually-hidden";
+      label.setAttribute("for", "ta-" + item.n);
+      label.textContent = "Question " + item.n + ": " + item.q;
+
+      var ta = document.createElement("textarea");
+      ta.id = "ta-" + item.n;
+      ta.placeholder = "Type your answer…";
+      ta.setAttribute("aria-describedby", "hint-" + item.n);
+      ta.value = (typeof answers[item.n] === "string") ? answers[item.n] : "";
+      ta.addEventListener("input", function(){
+        answers[item.n] = ta.value;
+        save();
+        refresh(item.n);
+        pushSoon();
+      });
+      ta.addEventListener("blur", saveNow);
+      ta.addEventListener("keydown", function(e){
+        if((e.ctrlKey || e.metaKey) && e.key === "Enter"){ e.preventDefault(); advance(item.n); }
+        else if(e.key === "Escape"){ e.preventDefault(); closeCard(item.n); }
+      });
+
+      var row = document.createElement("div");
+      row.className = "row";
+
+      var next = document.createElement("button");
+      next.className = "btn primary";
+      next.type = "button";
+      next.textContent = isLast ? "Save & review" : "Save & next question";
+      next.addEventListener("click", function(){ advance(item.n); });
+      row.appendChild(next);
+
+      if(item.n > 1){
+        var back = document.createElement("button");
+        back.className = "btn ghost";
+        back.type = "button";
+        back.textContent = "Previous";
+        back.addEventListener("click", function(){ openCard(item.n - 1); });
+        row.appendChild(back);
+      }
+      if(!isLast){
+        var skip = document.createElement("button");
+        skip.className = "btn ghost";
+        skip.type = "button";
+        skip.textContent = "Skip for now";
+        skip.addEventListener("click", function(){ openCard(item.n + 1); });
+        row.appendChild(skip);
+      }
+      var kbd = document.createElement("span");
+      kbd.className = "kbd";
+      kbd.textContent = "Ctrl + Enter to continue";
+      row.appendChild(kbd);
+
+      panel.appendChild(hint);
+      panel.appendChild(label);
+      panel.appendChild(ta);
+      panel.appendChild(row);
+      card.appendChild(panel);
+      frag.appendChild(card);
+
+      nodes[item.n] = { card:card, btn:btn, num:num, state:state, preview:preview, panel:panel, ta:ta };
+    });
+
+    cardsEl.appendChild(frag);
+  }
+
+  /* ---------- State updates ---------- */
+  function refresh(n){
+    var node = nodes[n];
+    var filled = val(n);
+    node.card.classList.toggle("done", !!filled);
+    node.num.textContent = filled ? "✓" : String(n);
+    node.state.className = "tag " + (filled ? "ans" : "todo");
+    node.state.textContent = filled ? "Answered" : "Not answered";
+    node.preview.textContent = filled ? filled.replace(/\s+/g, " ") : "";
+    meter();
+    drawReview(n);
+  }
+  function refreshAll(){
+    QUESTIONS.forEach(function(item){ refresh(item.n); });
+  }
+
+  function openCard(n, opts){
+    if(n < 1 || n > TOTAL) return;
+    if(openN !== null && nodes[openN]){
+      nodes[openN].card.classList.remove("open");
+      nodes[openN].btn.setAttribute("aria-expanded", "false");
+    }
+    openN = n;
+    nodes[n].card.classList.add("open");
+    nodes[n].btn.setAttribute("aria-expanded", "true");
+    meter();
+    if(!opts || opts.focus !== false) focusOpen();
+  }
+  function closeCard(n){
+    if(!nodes[n]) return;
+    nodes[n].card.classList.remove("open");
+    nodes[n].btn.setAttribute("aria-expanded", "false");
+    if(openN === n) openN = null;
+    meter();
+    nodes[n].btn.focus({ preventScroll:true });
+  }
+  function toggle(n){
+    if(openN === n) closeCard(n);
+    else openCard(n);
+  }
+
+  function advance(n){
+    saveNow();
+    pushNow(answeredCount() >= TOTAL ? "prep-complete" : "question-saved");
+    if(n < TOTAL){
+      openCard(n + 1);
+      toast("Saved — question " + (n + 1) + " of " + TOTAL);
+    }else{
+      closeCard(n);
+      openN = null;
+      meter();
+      toast("All answers saved");
+      if(!reviewEl.hidden){
+        try{ reviewEl.scrollIntoView({ behavior:"smooth", block:"start" }); }
+        catch(e){ reviewEl.scrollIntoView(); }
+      }
+    }
+  }
+
+  function focusOpen(){
+    window.requestAnimationFrame(function(){
+      if(openN === null || !nodes[openN]) return;
+      var node = nodes[openN];
+      try{ node.card.scrollIntoView({ behavior:"smooth", block:"center" }); }
+      catch(e){ node.card.scrollIntoView(); }
+      node.ta.focus({ preventScroll:true });
+    });
+  }
+
+  function meter(){
+    var done = answeredCount();
+    var pct = Math.round(done / TOTAL * 100);
+    document.getElementById("fill").style.width = pct + "%";
+    document.getElementById("pct").textContent = pct + "% complete";
+    document.getElementById("stat").textContent = (openN !== null)
+      ? "Question " + openN + " of " + TOTAL
+      : done + " of " + TOTAL + " answered";
+    var track = document.querySelector(".track");
+    if(track) track.setAttribute("aria-valuenow", String(done));
+  }
+
+  /* ---------- Review ---------- */
+  var reviewBuilt = false;
+  var reviewLead, reviewRows = {};
+
+  function buildReview(){
+    var h2 = document.createElement("h2");
+    h2.textContent = "Your prep summary";
+
+    reviewLead = document.createElement("p");
+    reviewLead.className = "lead";
+
+    reviewEl.appendChild(h2);
+    reviewEl.appendChild(reviewLead);
+
+    QUESTIONS.forEach(function(item){
+      var qa = document.createElement("div");
+      qa.className = "qa";
+      var q = document.createElement("p");
+      q.className = "q";
+      q.textContent = item.n + (item.key ? " ★" : "") + " · " + item.q;
+      var a = document.createElement("p");
+      a.className = "a empty";
+      a.textContent = "No answer yet";
+      qa.appendChild(q);
+      qa.appendChild(a);
+      reviewEl.appendChild(qa);
+      reviewRows[item.n] = a;
+    });
+
+    var note = document.createElement("p");
+    note.className = "sync-note";
+    note.id = "syncNote";
+    note.hidden = true;
+    note.textContent = "Live sync is on — your answers are shared with your FBC as you write them.";
+    reviewEl.insertBefore(note, reviewEl.children[2] || null);
+
+    var bar = document.createElement("div");
+    bar.className = "bar";
+
+    bar.appendChild(mkBtn("btn primary", "Download answers", downloadAnswers));
+    bar.appendChild(mkBtn("btn ghost", "Copy all", copyAll));
+    bar.appendChild(mkBtn("btn ghost", "Print / save as PDF", printSheet));
+    var cb = mkBtn("btn ghost", syncOn() ? "SharePoint sync ✓" : "Connect to SharePoint", openSyncModal);
+    cb.id = "connectBtn";
+    bar.appendChild(cb);
+    bar.appendChild(mkBtn("btn ghost", "Export data (.json)", exportData));
+    bar.appendChild(mkBtn("btn ghost", "Import data", function(){
+      var f = document.getElementById("importFile");
+      if(f){ f.value = ""; f.click(); }
+    }));
+    bar.appendChild(mkBtn("btn ghost", "Download app (share)", downloadApp));
+    bar.appendChild(mkBtn("btn danger", "Start over", startOver));
+    reviewEl.appendChild(bar);
+
+    reviewBuilt = true;
+    updateSyncUI();
+  }
+
+  function mkBtn(cls, text, fn){
+    var b = document.createElement("button");
+    b.className = cls;
+    b.type = "button";
+    b.textContent = text;
+    b.addEventListener("click", fn);
+    return b;
+  }
+
+  /* Pass a question number to repaint just that row — typing used to rewrite
+     all twelve on every keystroke, which made long answers feel laggy. */
+  function drawReview(onlyN){
+    var done = answeredCount();
+    if(!done){ reviewEl.hidden = true; return; }
+    var justBuilt = false;
+    if(!reviewBuilt){ buildReview(); justBuilt = true; }
+    reviewEl.hidden = false;
+    reviewLead.textContent = done + " of " + TOTAL + " questions answered. Click any question above to revise.";
+    var paint = function(item){
+      var a = val(item.n);
+      var el = reviewRows[item.n];
+      if(!el) return;
+      el.className = "a" + (a ? "" : " empty");
+      el.textContent = a || "No answer yet";
+    };
+    if(onlyN && !justBuilt && reviewRows[onlyN]){
+      var one = null, i;
+      for(i = 0; i < TOTAL; i++){ if(QUESTIONS[i].n === onlyN){ one = QUESTIONS[i]; break; } }
+      if(one){ paint(one); return; }
+    }
+    QUESTIONS.forEach(paint);
+  }
+
+  /* ---------- Export ---------- */
+  function stamp(){
+    var d = new Date();
+    function p(x){ return (x < 10 ? "0" : "") + x; }
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
+  }
+
+  function plainText(){
+    var nl = "\r\n";
+    var out = "CSA OPPORTUNITY PREP — 12 QUESTIONS" + nl + new Date().toLocaleString() + nl + nl;
+    QUESTIONS.forEach(function(item){
+      out += item.n + ". " + item.q + (item.key ? "  (priority)" : "") + nl;
+      out += (val(item.n) || "[no answer]").replace(/\r?\n/g, nl) + nl + nl;
+    });
+    out += answeredCount() + " of " + TOTAL + " questions answered." + nl;
+    return out;
+  }
+
+  /* The anchor is removed synchronously — leaving it in the DOM meant a later
+     "Download app" could serialise a stray download link into the shared copy. */
+  function saveBlob(content, name, type){
+    try{
+      var blob = new Blob([ content ], { type:type || "text/plain;charset=utf-8" });
+      if(window.navigator && window.navigator.msSaveOrOpenBlob){
+        window.navigator.msSaveOrOpenBlob(blob, name);
+        return true;
+      }
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = name;
+      a.rel = "noopener";
+      a.style.display = "none";
+      a.setAttribute("data-transient", "1");
+      document.body.appendChild(a);
+      a.click();
+      if(a.parentNode) a.parentNode.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 30000);
+      return true;
+    }catch(e){ return false; }
+  }
+  function slug(){
+    var s = val(1) || "Prep";
+    return s.replace(/[^A-Za-z0-9 _-]+/g, "").trim().replace(/\s+/g, "-").slice(0, 50) || "Prep";
+  }
+  function downloadAnswers(){
+    var text = plainText();
+    var name = "CSA-Opportunity-Prep-" + slug() + "-" + stamp() + ".txt";
+    if(saveBlob("\uFEFF" + text, name, "text/plain;charset=utf-8")){
+      toast("Answers downloaded");
+      return;
+    }
+    try{
+      var w = window.open("", "_blank");
+      if(w){
+        w.document.title = name;
+        var pre = w.document.createElement("pre");
+        pre.textContent = text;
+        w.document.body.appendChild(pre);
+        toast("Opened in a new tab — save from there");
+      }else{
+        toast("Download blocked — use Copy all");
+      }
+    }catch(e2){ toast("Download blocked — use Copy all"); }
+  }
+
+  function exportData(){
+    var payload = {
+      app:APP_NAME,
+      version:SCHEMA_VERSION,
+      exportedAt:new Date().toISOString(),
+      prepId:prepId(),
+      answers:answers
+    };
+    var ok = saveBlob(JSON.stringify(payload, null, 2),
+      "CSA-Prep-" + slug() + "-" + stamp() + ".json", "application/json;charset=utf-8");
+    toast(ok ? "Data exported" : "Export failed");
+  }
+  function importData(file){
+    var reader = new FileReader();
+    reader.onload = function(){
+      var parsed;
+      try{ parsed = JSON.parse(String(reader.result)); }
+      catch(e){ toast("That file isn't a valid export"); return; }
+      if(!parsed || typeof parsed !== "object" || !parsed.answers || typeof parsed.answers !== "object"){
+        toast("That file isn't a valid export"); return;
+      }
+      if(!window.confirm("Import this file? It replaces the answers currently on this device.")) return;
+      var k, v;
+      QUESTIONS.forEach(function(item){ delete answers[item.n]; });
+      for(k in parsed.answers){
+        if(!Object.prototype.hasOwnProperty.call(parsed.answers, k)) continue;
+        v = parsed.answers[k];
+        if(typeof v !== "string") continue;
+        answers[k] = v;
+      }
+      if(typeof parsed.prepId === "string" && parsed.prepId){
+        meta.prepId = parsed.prepId;
+        lsSet(META_STORE, JSON.stringify(meta));
+      }
+      saveNow();
+      QUESTIONS.forEach(function(item){
+        nodes[item.n].ta.value = (typeof answers[item.n] === "string") ? answers[item.n] : "";
+      });
+      refreshAll();
+      drawReview();
+      pushNow("manual-save");
+      toast("Data imported");
+    };
+    reader.onerror = function(){ toast("Could not read that file"); };
+    reader.readAsText(file);
+  }
+
+  /* A clean, blank copy of this whole app — with the connection baked in. */
+  function downloadApp(){
+    try{
+      var clone = document.documentElement.cloneNode(true);
+      var g = function(sel){ return clone.querySelector(sel); };
+      var cards = g("#cards"); if(cards) cards.innerHTML = "";
+      var rev = g("#review"); if(rev){ rev.innerHTML = ""; rev.setAttribute("hidden", ""); }
+      var ph = g("#printHead"); if(ph) ph.innerHTML = "";
+      var t = g("#toast"); if(t){ t.className = "toast"; t.textContent = ""; }
+      var f = g("#fill"); if(f) f.removeAttribute("style");
+      var pc = g("#pct"); if(pc) pc.textContent = "0% complete";
+      var st = g("#stat"); if(st) st.textContent = "Question 1 of 12";
+      var tr = g(".track"); if(tr) tr.setAttribute("aria-valuenow", "0");
+      var sp = g("#syncPill"); if(sp) sp.setAttribute("data-state", "off");
+      var sx = g("#syncText"); if(sx) sx.textContent = "Not connected";
+      var ft = g("#foot"); if(ft){ ft.className = "foot"; ft.textContent = "Answers save automatically in this browser."; }
+      var imp = g("#importFile"); if(imp) imp.value = "";
+      Array.prototype.slice.call(clone.querySelectorAll("a[download],[data-transient],.modal-back"))
+        .forEach(function(n){ if(n.parentNode) n.parentNode.removeChild(n); });
+
+      var html = "<!DOCTYPE html>\n" + clone.outerHTML;
+      var baked = JSON.stringify({
+        url:sync.cfg.url || "", secret:sync.cfg.secret || "",
+        team:sync.cfg.team || "", mode:sync.cfg.mode || "live", stamp:Date.now()
+      }).replace(/</g, "\\u003c").replace(/>/g, "\\u003e");
+      html = html.replace(/var SYNC_DEFAULTS=[^\n]*?\/\*__SYNC_DEFAULTS__\*\//,
+        "var SYNC_DEFAULTS=" + baked + "; /*__SYNC_DEFAULTS__*/");
+
+      var ok = saveBlob(html, "CSA Prep Sheet.html", "text/html;charset=utf-8");
+      toast(ok ? (syncOn() ? "App downloaded — pre-connected to your flow" : "App downloaded — share this file")
+               : "Download failed");
+    }catch(e){ toast("Download failed"); }
+  }
+
+  /* Print always produces something — the review used to be hidden when nothing
+     was answered, which printed a completely blank page. */
+  function printSheet(){
+    var head = document.getElementById("printHead");
+    if(head){
+      head.innerHTML = "";
+      var h = document.createElement("h1");
+      h.textContent = "CSA Opportunity Prep - 12 Questions";
+      var p = document.createElement("p");
+      p.textContent = (val(1) ? val(1).replace(/\s+/g, " ").slice(0, 120) + " \u00b7 " : "") +
+        answeredCount() + " of " + TOTAL + " answered \u00b7 " + stamp();
+      head.appendChild(h);
+      head.appendChild(p);
+    }
+    if(!reviewBuilt) buildReview();
+    drawReview();
+    if(!answeredCount()){
+      reviewEl.hidden = false;
+      if(reviewLead) reviewLead.textContent = "No answers recorded yet.";
+    }
+    window.print();
+  }
+
+  function copyAll(){ copyString(plainText(), "Copied to clipboard"); }
+
+  function copyString(text, okMsg){
+    if(window.navigator && navigator.clipboard && window.isSecureContext && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(
+        function(){ toast(okMsg || "Copied to clipboard"); },
+        function(){ legacyCopy(text, okMsg); }
+      );
+    }else{
+      legacyCopy(text, okMsg);
+    }
+  }
+
+  function legacyCopy(text, okMsg){
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "readonly");
+    ta.style.position = "fixed";
+    ta.style.top = "0";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, text.length);
+    var ok = false;
+    try{ ok = document.execCommand("copy"); }catch(e){ ok = false; }
+    document.body.removeChild(ta);
+    toast(ok ? (okMsg || "Copied to clipboard") : "Copy blocked — use Download answers");
+  }
+
+  function startOver(){
+    if(!window.confirm("Clear all 12 answers and start over?")) return;
+    QUESTIONS.forEach(function(item){ delete answers[item.n]; });
+    saveNow();
+    QUESTIONS.forEach(function(item){ nodes[item.n].ta.value = ""; });
+    /* A fresh id, so the new prep sheet becomes its own row and the finished
+       one already in SharePoint is left intact. */
+    meta.prepId = "";
+    lsDel(META_STORE);
+    writeOutbox([]);
+    refreshAll();
+    drawReview();
+    pushNow("prep-started");
+    openCard(1);
+    toast("Cleared — starting over");
+  }
+
+  /* =========================================================== SHAREPOINT SYNC
+     Pushes a full snapshot of the prep sheet to a Power Automate "When an HTTP
+     request is received" trigger. Sent as Content-Type: text/plain so the
+     browser treats it as a "simple request" and skips the CORS preflight that
+     Power Automate cannot answer. Anything that fails to send is queued and
+     retried, so a dropped connection never loses an answer.
+     ======================================================================== */
+  var sync = {
+    cfg:{ url:"", secret:"", team:"", person:"", enabled:true, mode:"live", stamp:0 },
+    state:"off", lastOk:null, unconfirmed:false,
+    inFlight:false, timer:null, retryTimer:null, retryDelay:5000
+  };
+
+  function loadSyncConfig(){
+    var cfg = { url:"", secret:"", team:"", person:"", enabled:true, mode:"live", stamp:0 };
+    var baked = (SYNC_DEFAULTS && SYNC_DEFAULTS.url) ? SYNC_DEFAULTS : null;
+    var saved = null, k;
+    try{
+      saved = JSON.parse(lsGet(SYNC_KEY) || "null");
+      if(saved && typeof saved === "object"){
+        for(k in cfg){
+          if(saved[k] === undefined || saved[k] === null || typeof saved[k] === "object") continue;
+          cfg[k] = (k === "enabled") ? !!saved[k]
+                 : (k === "stamp") ? (parseInt(saved[k],10) || 0)
+                 : String(saved[k]);
+        }
+      }else{ saved = null; }
+    }catch(e){ saved = null; }
+    /* A newer file wins over an older stored connection, so re-issuing the app
+       against a new flow re-points everyone who opens it. Anything the user set
+       themselves after that date is kept. */
+    if(baked && (!saved || (parseInt(baked.stamp,10) || 0) > cfg.stamp)){
+      cfg.url = String(baked.url || "");
+      cfg.secret = String(baked.secret || "");
+      cfg.team = String(baked.team || "");
+      if(baked.mode) cfg.mode = String(baked.mode);
+      cfg.stamp = parseInt(baked.stamp,10) || 0;
+      cfg.enabled = true;
+    }
+    /* A link can carry the connection: ...?sync=<url>&team=<name>&secret=<key> */
+    try{
+      var qs = new URLSearchParams(window.location.search);
+      if(qs.get("sync")){ cfg.url = qs.get("sync"); cfg.stamp = Date.now(); cfg.enabled = true; }
+      if(qs.get("team")) cfg.team = qs.get("team");
+      if(qs.get("secret")) cfg.secret = qs.get("secret");
+      if(qs.get("person")) cfg.person = qs.get("person");
+    }catch(e){}
+    return cfg;
+  }
+  function saveSyncConfig(){ lsSet(SYNC_KEY, JSON.stringify(sync.cfg)); }
+  function syncOn(){ return !!(sync.cfg.enabled && /^https?:\/\//i.test(sync.cfg.url)); }
+
+  function readOutbox(){
+    try{
+      var a = JSON.parse(lsGet(OUTBOX_KEY) || "[]");
+      return Array.isArray(a) ? a : [];
+    }catch(e){ return []; }
+  }
+  function writeOutbox(a){
+    if(a.length > 60) a = a.slice(a.length - 60);
+    lsSet(OUTBOX_KEY, JSON.stringify(a));
+  }
+
+  function buildPayload(event){
+    var done = answeredCount();
+    var p = {
+      schemaVersion:SCHEMA_VERSION,
+      app:APP_NAME,
+      prepId:prepId(),
+      secret:sync.cfg.secret || "",
+      event:event || "update",
+      sentAt:new Date().toISOString(),
+      team:sync.cfg.team || "",
+      person:sync.cfg.person || "",
+      prepStatus:(done >= TOTAL) ? "Complete" : (done > 0 ? "In progress" : "Started"),
+      answeredCount:done,
+      totalQuestions:TOTAL,
+      progressPct:Math.round(done / TOTAL * 100),
+      priorityAnswered:(function(){
+        var c = 0, i;
+        for(i = 0; i < TOTAL; i++){ if(QUESTIONS[i].key && val(QUESTIONS[i].n)) c++; }
+        return c;
+      })(),
+      priorityTotal:(function(){
+        var c = 0, i;
+        for(i = 0; i < TOTAL; i++){ if(QUESTIONS[i].key) c++; }
+        return c;
+      })(),
+      projectSummary:val(1)
+    };
+    QUESTIONS.forEach(function(item){ p["q" + item.n] = val(item.n); });
+    return p;
+  }
+
+  function setSyncState(s, label){
+    sync.state = s;
+    var pill = document.getElementById("syncPill");
+    var text = document.getElementById("syncText");
+    if(!pill || !text) return;
+    pill.setAttribute("data-state", s);
+    text.textContent = label;
+    pill.setAttribute("title", s === "off"
+      ? "Click to connect this prep sheet to SharePoint"
+      : "Connected" + (sync.cfg.team ? " · " + sync.cfg.team : "") + " — click to change");
+  }
+  function hhmm(){
+    var d = new Date(), p = function(n){ return (n < 10 ? "0" : "") + n; };
+    return p(d.getHours()) + ":" + p(d.getMinutes());
+  }
+  function refreshSyncStatus(){
+    if(!syncOn()){ setSyncState("off","Not connected"); return; }
+    var pending = readOutbox().length;
+    if(sync.inFlight){ setSyncState("sending","Sending…"); return; }
+    if(pending){ setSyncState("queued", pending + " pending"); return; }
+    if(sync.lastOk && sync.unconfirmed){ setSyncState("unconfirmed","Sent " + sync.lastOk); return; }
+    setSyncState("synced", sync.lastOk ? "Synced " + sync.lastOk : "Connected");
+    showSyncNote();
+  }
+  function showSyncNote(){
+    if(!reviewBuilt || !syncOn()) return;
+    var note = document.getElementById("syncNote");
+    if(note) note.hidden = false;
+  }
+
+  function postSnapshot(payload, cb){
+    var body = JSON.stringify(payload);
+    var url = sync.cfg.url;
+    if(!/^https?:\/\//i.test(url)){ cb({ ok:false, detail:"No endpoint configured" }); return; }
+    if(typeof fetch !== "function"){
+      try{
+        var x = new XMLHttpRequest();
+        x.open("POST", url, true);
+        x.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+        x.onload = function(){ cb({ ok:x.status >= 200 && x.status < 300, confirmed:true, detail:"HTTP " + x.status }); };
+        x.onerror = function(){ cb({ ok:false, detail:"Network error" }); };
+        x.send(body);
+      }catch(e){ cb({ ok:false, detail:String(e && e.message || e) }); }
+      return;
+    }
+    fetch(url, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=UTF-8" },
+      body:body,
+      keepalive:body.length < 60000
+    }).then(function(res){
+      cb({ ok:res.ok, confirmed:true, detail:"HTTP " + res.status });
+    }).catch(function(){
+      /* Most likely the flow did not return Access-Control-Allow-Origin, so the
+         browser hid the response. Re-send opaquely: the flow still runs, we
+         just cannot read the result. */
+      fetch(url, {
+        method:"POST", mode:"no-cors",
+        headers:{ "Content-Type":"text/plain;charset=UTF-8" },
+        body:body,
+        keepalive:body.length < 60000
+      }).then(function(){
+        cb({ ok:true, confirmed:false, detail:"Sent (delivery not confirmed — add the CORS header to your flow's Response step to confirm)" });
+      }).catch(function(err){
+        cb({ ok:false, detail:(navigator.onLine === false ? "Offline" : "Could not reach the flow") + " — " + String(err && err.message || err) });
+      });
+    });
+  }
+
+  function flushOutbox(){
+    if(!syncOn() || sync.inFlight) return;
+    var box = readOutbox();
+    if(!box.length){ refreshSyncStatus(); return; }
+    sync.inFlight = true;
+    refreshSyncStatus();
+    postSnapshot(box[0], function(res){
+      sync.inFlight = false;
+      var cur = readOutbox();
+      if(res.ok){
+        cur.shift();
+        writeOutbox(cur);
+        sync.lastOk = hhmm();
+        sync.unconfirmed = !res.confirmed;
+        sync.retryDelay = 5000;
+        refreshSyncStatus();
+        if(cur.length) setTimeout(flushOutbox, 150);
+      }else{
+        refreshSyncStatus();
+        if(sync.retryTimer) clearTimeout(sync.retryTimer);
+        sync.retryTimer = setTimeout(flushOutbox, sync.retryDelay);
+        sync.retryDelay = Math.min(sync.retryDelay * 2, 120000);
+      }
+    });
+  }
+  function enqueue(event){
+    if(!syncOn()) return;
+    var box = readOutbox(), p = buildPayload(event);
+    if(box.length && box[box.length-1].event === event && box[box.length-1].prepId === p.prepId){
+      box[box.length-1] = p;                 /* collapse rapid typing into one */
+    }else{
+      box.push(p);
+    }
+    writeOutbox(box);
+    refreshSyncStatus();
+    flushOutbox();
+  }
+  /* Every push is one Power Automate run and tenants have a daily request
+     budget, so how often we send is a setting rather than a hard-coded choice. */
+  function allowed(event){
+    var m = sync.cfg.mode || "live";
+    if(event === "prep-complete" || event === "manual-save" || event === "test" ||
+       event === "connected" || event === "prep-started") return true;
+    if(event === "question-saved") return m === "live" || m === "step";
+    return m === "live";                     /* typing */
+  }
+  function pushNow(event){
+    event = event || "update";
+    if(!syncOn() || !allowed(event)) return;
+    if(sync.timer){ clearTimeout(sync.timer); sync.timer = null; }
+    enqueue(event);
+  }
+  function pushSoon(){
+    if(!syncOn() || !allowed("typing")) return;
+    if(sync.timer) clearTimeout(sync.timer);
+    sync.timer = setTimeout(function(){ sync.timer = null; enqueue("typing"); }, 1500);
+  }
+  function flushPendingTyping(){
+    if(sync.timer){ clearTimeout(sync.timer); sync.timer = null; enqueue("typing"); }
+  }
+
+  /* ---------- Connection settings ---------- */
+  function esc(v){
+    if(v === null || v === undefined) v = "";
+    return String(v).replace(/[&<>"']/g, function(c){
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" }[c];
+    });
+  }
+  function syncLink(cfg){
+    var base = window.location.href.split("?")[0].split("#")[0];
+    var q = "?sync=" + encodeURIComponent(cfg.url);
+    if(cfg.team) q += "&team=" + encodeURIComponent(cfg.team);
+    if(cfg.secret) q += "&secret=" + encodeURIComponent(cfg.secret);
+    return base + q;
+  }
+  function openSyncModal(){
+    if(document.getElementById("syncModal")) return;
+    var back = document.createElement("div");
+    back.className = "modal-back";
+    back.id = "syncModal";
+    back.innerHTML =
+      '<div class="modal" role="dialog" aria-modal="true" aria-labelledby="smTitle">' +
+        '<h2 id="smTitle">Connect to SharePoint</h2>' +
+        '<p class="modal-sub">Paste the HTTP POST URL from your Power Automate flow. Answers are then pushed to your SharePoint list as they are written — a couple of seconds after typing stops, and again each time a question is saved.</p>' +
+        '<div id="tres"></div>' +
+        '<div class="fld">' +
+          '<label for="syncUrl">Flow HTTP POST URL</label>' +
+          '<span class="fhelp">Power Automate → your flow → the “When an HTTP request is received” trigger → copy the URL.</span>' +
+          '<input type="text" id="syncUrl" placeholder="https://prod-00.westus.logic.azure.com:443/workflows/…" value="' + esc(sync.cfg.url) + '" autocomplete="off" spellcheck="false" />' +
+        '</div>' +
+        '<div class="fld-row">' +
+          '<div class="fld">' +
+            '<label for="syncTeam">Team / market</label>' +
+            '<span class="fhelp">Tags every row so one flow can serve several teams.</span>' +
+            '<input type="text" id="syncTeam" placeholder="e.g. Southeast" value="' + esc(sync.cfg.team) + '" autocomplete="off" />' +
+          '</div>' +
+          '<div class="fld">' +
+            '<label for="syncPerson">Your name (CSA)</label>' +
+            '<span class="fhelp">Stored on this device only. Identifies who filled it in.</span>' +
+            '<input type="text" id="syncPerson" placeholder="e.g. J. Rivera" value="' + esc(sync.cfg.person) + '" autocomplete="off" />' +
+          '</div>' +
+        '</div>' +
+        '<div class="fld">' +
+          '<label for="syncMode">How often to send</label>' +
+          '<span class="fhelp">Every send is one Power Automate run. Dial this back if you are near your tenant’s daily request limit.</span>' +
+          '<select id="syncMode">' +
+            '<option value="live"' + ((sync.cfg.mode || "live") === "live" ? " selected" : "") + '>Live — a couple of seconds after typing stops</option>' +
+            '<option value="step"' + (sync.cfg.mode === "step" ? " selected" : "") + '>On each question — when “Save &amp; next” is clicked</option>' +
+            '<option value="final"' + (sync.cfg.mode === "final" ? " selected" : "") + '>On completion only — one send per prep sheet</option>' +
+          '</select>' +
+        '</div>' +
+        '<div class="fld">' +
+          '<label for="syncSecret">Shared key</label>' +
+          '<span class="fhelp">Optional. Your flow rejects any POST whose key does not match, so a leaked URL alone cannot write junk into your list.</span>' +
+          '<input type="text" id="syncSecret" placeholder="Any phrase — must match the one in your flow" value="' + esc(sync.cfg.secret) + '" autocomplete="off" spellcheck="false" />' +
+        '</div>' +
+        '<div class="modal-warn">Anyone you send this file or link to can post to that flow. Share it with your CSAs, not with customers, and treat the URL like a password.</div>' +
+        '<div class="modal-foot">' +
+          '<div>' +
+            '<button type="button" class="btn ghost" data-test>Send test row</button>' +
+            '<button type="button" class="btn ghost" data-copylink>Copy connected link</button>' +
+            '<button type="button" class="btn danger" data-off>Disconnect</button>' +
+          '</div>' +
+          '<div>' +
+            '<button type="button" class="btn ghost" data-cancel>Cancel</button>' +
+            '<button type="button" class="btn primary" data-save>Save connection</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(back);
+
+    var q = function(sel){ return back.querySelector(sel); };
+    var result = function(msg, cls){
+      q("#tres").innerHTML = '<div class="tres ' + (cls || "") + '">' + esc(msg) + '</div>';
+    };
+    var readForm = function(){
+      return {
+        url:q("#syncUrl").value.trim(),
+        team:q("#syncTeam").value.trim(),
+        person:q("#syncPerson").value.trim(),
+        secret:q("#syncSecret").value.trim(),
+        mode:q("#syncMode").value || "live",
+        enabled:true,
+        stamp:Date.now()
+      };
+    };
+    var onKey = function(e){ if(e.key === "Escape") close(); };
+    function close(){
+      document.removeEventListener("keydown", onKey);
+      if(back.parentNode) back.parentNode.removeChild(back);
+      var pill = document.getElementById("syncPill");
+      if(pill) pill.focus();
+    }
+    document.addEventListener("keydown", onKey);
+    back.addEventListener("mousedown", function(e){ if(e.target === back) close(); });
+
+    q("[data-cancel]").addEventListener("click", close);
+    q("[data-save]").addEventListener("click", function(){
+      var f = readForm();
+      if(f.url && !/^https:\/\//i.test(f.url) && !/^http:\/\/(localhost|127\.0\.0\.1)(:|\/)/i.test(f.url)){
+        result("That does not look like a flow URL — it must start with https:// so answers are encrypted in transit.", "bad");
+        return;
+      }
+      sync.cfg = f;
+      saveSyncConfig();
+      refreshSyncStatus();
+      if(syncOn()) pushNow("connected");
+      updateSyncUI();
+      close();
+      toast(syncOn() ? "Connected — this prep sheet is now syncing" : "Connection cleared");
+    });
+    q("[data-off]").addEventListener("click", function(){
+      sync.cfg = { url:"", secret:"", team:"", person:sync.cfg.person, enabled:true, mode:sync.cfg.mode || "live", stamp:Date.now() };
+      saveSyncConfig();
+      writeOutbox([]);
+      refreshSyncStatus();
+      updateSyncUI();
+      close();
+      toast("Disconnected — nothing is being sent");
+    });
+    q("[data-copylink]").addEventListener("click", function(){
+      var f = readForm();
+      if(!f.url){ result("Enter the flow URL first.", "bad"); return; }
+      copyString(syncLink(f), "Connected link copied");
+      result("Link copied. It only works for people who already have this HTML file — send them the file, then the link.", "");
+    });
+    q("[data-test]").addEventListener("click", function(){
+      var f = readForm();
+      if(!f.url){ result("Enter the flow URL first.", "bad"); return; }
+      result("Sending a test row…", "");
+      var saved = sync.cfg;
+      sync.cfg = f;
+      var payload = buildPayload("test");
+      payload.projectSummary = payload.projectSummary || "TEST — connection check";
+      postSnapshot(payload, function(res){
+        sync.cfg = saved;
+        if(res.ok && res.confirmed) result("Success — your flow accepted the test row (" + res.detail + "). Check your SharePoint list.", "ok");
+        else if(res.ok) result("Test row sent. " + res.detail + " Check your list to confirm it arrived.", "");
+        else result("Failed: " + res.detail, "bad");
+      });
+    });
+    q("#syncUrl").focus();
+  }
+
+  function updateSyncUI(){
+    var btn = document.getElementById("connectBtn");
+    if(btn) btn.textContent = syncOn() ? "SharePoint sync ✓" : "Connect to SharePoint";
+    var note = document.getElementById("syncNote");
+    if(note) note.hidden = !syncOn();
+  }
+
+  /* ---------- Toast ---------- */
+  var toastTimer = null;
+  function toast(msg){
+    var t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove("show"); }, 1900);
+  }
+
+  /* ---------- Start ---------- */
+  build();
+  refreshAll();
+  if(!storageOK) setFootWarning();
+
+  var firstOpen = 1;
+  for(var i = 0; i < TOTAL; i++){
+    if(!val(QUESTIONS[i].n)){ firstOpen = QUESTIONS[i].n; break; }
+    if(i === TOTAL - 1) firstOpen = TOTAL;
+  }
+  openCard(firstOpen, { focus:false });
+
+  /* pagehide is the reliable one — mobile browsers freeze or discard pages
+     without ever firing beforeunload, which quietly lost the last few words. */
+  window.addEventListener("pagehide", function(){ saveNow(); flushPendingTyping(); });
+  window.addEventListener("beforeunload", function(){ saveNow(); });
+  document.addEventListener("visibilitychange", function(){
+    if(document.visibilityState === "hidden"){ saveNow(); flushPendingTyping(); }
+    else flushOutbox();
+  });
+
+  /* ---------- Sync boot ---------- */
+  sync.cfg = loadSyncConfig();
+  if(sync.cfg.url) saveSyncConfig();   /* persist what we adopted, so an older
+                                          file cannot silently re-point us */
+  var pillEl = document.getElementById("syncPill");
+  if(pillEl) pillEl.addEventListener("click", openSyncModal);
+  var importEl = document.getElementById("importFile");
+  if(importEl){
+    importEl.addEventListener("change", function(){
+      if(importEl.files && importEl.files[0]) importData(importEl.files[0]);
+    });
+  }
+  window.addEventListener("online", function(){ sync.retryDelay = 5000; flushOutbox(); });
+  window.addEventListener("offline", refreshSyncStatus);
+  window.addEventListener("beforeprint", function(){
+    if(!reviewBuilt) buildReview();
+    drawReview();
+  });
+  refreshSyncStatus();
+  updateSyncUI();
+  if(syncOn()){ prepId(); setTimeout(flushOutbox, 600); }
+})();
+</script>
+
+
+</body></html>
