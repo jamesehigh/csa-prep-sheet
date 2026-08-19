@@ -394,7 +394,7 @@
       <label for="franchiseSelect">Franchise</label>
       <select id="franchiseSelect" disabled><option value="">Select an FBC first…</option></select>
     </div>
-    <p class="assignment-help" id="assignmentHelp">The franchise list will update automatically based on the selected FBC.</p>
+    <p class="assignment-help" id="assignmentHelp">The franchise list updates for the selected FBC. Your selection is private to your browser; other people using this link can work in different records at the same time.</p>
   </section>
   <h2 class="visually-hidden">The 12 questions</h2>
   <div id="cards"></div>
@@ -1677,7 +1677,13 @@
   }
 
   function sharedRequest(method, body){
-    return fetch(SHARED_API + (method === "GET" ? "?id=" + encodeURIComponent(sharedId) : ""), {
+    var query = "";
+    if(method === "GET"){
+      query = "?id=" + encodeURIComponent(sharedId) +
+        "&fbc=" + encodeURIComponent(assignment.fbc || "") +
+        "&franchise=" + encodeURIComponent(assignment.franchise || "");
+    }
+    return fetch(SHARED_API + query, {
       method:method,
       headers:{ "Content-Type":"application/json" },
       body:method === "GET" ? undefined : JSON.stringify(body)
@@ -1707,11 +1713,10 @@
   }
 
   function sharedSetAssignment(fbc, franchise){
-    if(!sharedId) return Promise.resolve();
-    return sharedRequest("PUT", { id:sharedId, field:"assignment", fbc:fbc, franchise:franchise })
-      .then(function(res){ if(!res.ok) throw new Error("save"); return res.json(); })
-      .then(function(data){ sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0); updateShareUI("Shared ✓"); })
-      .catch(function(){ updateShareUI("Save pending"); });
+    /* The selection belongs to this browser only. The shared link stores the
+       answers by FBC + franchise, so another person can select a different
+       record without changing what anyone else is viewing. */
+    return Promise.resolve({ fbc:fbc, franchise:franchise });
   }
 
   function sharedSaveSoon(n, value){
@@ -1739,7 +1744,7 @@
 
   function applyShared(data){
     if(!data || !data.answers) return;
-    applyAssignment(data.fbc || "", data.franchise || "");
+    if((data.fbc || "") !== assignment.fbc || (data.franchise || "") !== assignment.franchise) return;
     QUESTIONS.forEach(function(item){
       var incoming = typeof data.answers[item.n] === "string" ? data.answers[item.n]
                    : typeof data.answers[String(item.n)] === "string" ? data.answers[String(item.n)] : "";
