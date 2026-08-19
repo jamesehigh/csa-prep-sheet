@@ -1269,12 +1269,41 @@
   }
 
   function startOver(){
-    if(!window.confirm("Clear all 12 answers and start over?")) return;
-    QUESTIONS.forEach(function(item){ delete answers[item.n]; });
-    delete answers.fbcNotes;
+    var sharedRecord = sharedActive() && assignment.fbc && assignment.franchise;
+    var prompt = sharedRecord
+      ? "Clear all 12 answers and FBC Notes for " + assignment.franchise + "? This will clear the record for everyone using the shared sheet."
+      : "Clear all 12 answers and start over?";
+    if(!window.confirm(prompt)) return;
+    if(saveTimer){ clearTimeout(saveTimer); saveTimer = null; }
+    Object.keys(sharedTimers).forEach(function(key){
+      if(sharedTimers[key]) clearTimeout(sharedTimers[key]);
+    });
+    sharedTimers = {};
+    QUESTIONS.forEach(function(item){ answers[item.n] = ""; });
+    answers.fbcNotes = "";
     saveNow();
     QUESTIONS.forEach(function(item){ nodes[item.n].ta.value = ""; });
     if(fbcNotesEl){ fbcNotesEl.value = ""; collapseFbcNotes(); }
+    refreshAll();
+    drawReview();
+    openCard(1);
+
+    if(sharedRecord){
+      sharedRequest("POST", {
+        id:sharedId,
+        fbc:assignment.fbc,
+        franchise:assignment.franchise,
+        answers:answers
+      }).then(function(res){ if(!res.ok) throw new Error("clear"); return res.json(); })
+        .then(function(data){
+          sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0);
+          updateShareUI("Shared ✓");
+          toast("Cleared for everyone");
+        })
+        .catch(function(){ updateShareUI("Clear pending"); toast("Cleared here — shared clear is pending"); });
+      return;
+    }
+
     assignment = { fbc:"", franchise:"" };
     lsDel(SELECTION_STORE);
     applyAssignment("", "");
@@ -1288,9 +1317,6 @@
       try{ window.history.replaceState({}, "", window.location.pathname); }catch(e){}
       updateShareUI();
     }
-    refreshAll();
-    drawReview();
-    openCard(1);
     toast("Cleared — starting over");
   }
 
@@ -1777,14 +1803,19 @@
     }else if((data.fbc || "") !== assignment.fbc || (data.franchise || "") !== assignment.franchise){
       return;
     }
+    var remoteClear = QUESTIONS.every(function(item){
+      var value = typeof data.answers[item.n] === "string" ? data.answers[item.n]
+                : typeof data.answers[String(item.n)] === "string" ? data.answers[String(item.n)] : null;
+      return value === "";
+    }) && (data.answers.fbcNotes === "" || data.answers.fbcNotes === undefined);
     QUESTIONS.forEach(function(item){
       var incoming = typeof data.answers[item.n] === "string" ? data.answers[item.n]
                    : typeof data.answers[String(item.n)] === "string" ? data.answers[String(item.n)] : "";
-      if(document.activeElement === nodes[item.n].ta) return;
+      if(!remoteClear && document.activeElement === nodes[item.n].ta) return;
       answers[item.n] = incoming;
       nodes[item.n].ta.value = incoming;
     });
-    if(document.activeElement !== fbcNotesEl){
+    if(remoteClear || document.activeElement !== fbcNotesEl){
       answers.fbcNotes = typeof data.answers.fbcNotes === "string" ? data.answers.fbcNotes : "";
       if(fbcNotesEl){ fbcNotesEl.value = answers.fbcNotes; collapseFbcNotes(); }
     }
