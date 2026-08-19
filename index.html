@@ -345,6 +345,9 @@
     <div class="meter">
       <div class="meter-top">
         <span id="stat">Question 1 of 12</span>
+        <button type="button" class="sync-pill" id="shareBtn" data-state="off" title="Create a link that shares these answers">
+          <span class="sync-dot" aria-hidden="true"></span><span id="shareText">Create shared link</span>
+        </button>
         <b id="pct">0% complete</b>
       </div>
       <div class="track" role="progressbar" aria-label="Questions answered" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0"><div class="fill" id="fill"></div></div>
@@ -401,6 +404,16 @@
   var OUTBOX_KEY = "csa-prep-sync-outbox-v1";
   var SCHEMA_VERSION = 1;
   var APP_NAME = "CSA Opportunity Prep";
+  var SHARED_API = "https://csa-prep-sheet.jamesehigh.chatgpt.site/api/sheets";
+  var sharedId = "";
+  try{
+    var requestedSheet = new URLSearchParams(window.location.search).get("sheet") || "";
+    if(/^[a-f0-9-]{36}$/i.test(requestedSheet)) sharedId = requestedSheet;
+  }catch(e){}
+  if(sharedId){
+    STORE += "-" + sharedId;
+    META_STORE += "-" + sharedId;
+  }
 
   /* Baked-in connection. "Download app (share)" rewrites this line so the copy
      you hand out is pre-connected. Do not reformat this line. */
@@ -583,9 +596,9 @@
         answers[item.n] = ta.value;
         save();
         refresh(item.n);
-        pushSoon();
+        sharedSaveSoon(item.n, ta.value);
       });
-      ta.addEventListener("blur", saveNow);
+      ta.addEventListener("blur", function(){ saveNow(); sharedSaveQuestion(item.n, ta.value); });
       ta.addEventListener("keydown", function(e){
         if((e.ctrlKey || e.metaKey) && e.key === "Enter"){ e.preventDefault(); advance(item.n); }
         else if(e.key === "Escape"){ e.preventDefault(); closeCard(item.n); }
@@ -678,7 +691,7 @@
 
   function advance(n){
     saveNow();
-    pushNow(answeredCount() >= TOTAL ? "prep-complete" : "question-saved");
+    sharedSaveQuestion(n, answers[n] || "");
     if(n < TOTAL){
       openCard(n + 1);
       toast("Saved — question " + (n + 1) + " of " + TOTAL);
@@ -903,7 +916,7 @@
       });
       refreshAll();
       drawReview();
-      pushNow("manual-save");
+      sharedSaveAll();
       toast("Data imported");
     };
     reader.onerror = function(){ toast("Could not read that file"); };
@@ -1006,9 +1019,13 @@
     meta.prepId = "";
     lsDel(META_STORE);
     writeOutbox([]);
+    if(sharedId){
+      sharedId = "";
+      try{ window.history.replaceState({}, "", window.location.pathname); }catch(e){}
+      updateShareUI();
+    }
     refreshAll();
     drawReview();
-    pushNow("prep-started");
     openCard(1);
     toast("Cleared — starting over");
   }
@@ -1387,6 +1404,116 @@
     if(note) note.hidden = !syncOn();
   }
 
+  /* ---------- Shared-link collaboration ---------- */
+  var sharedTimers = {};
+  var sharedLastUpdate = 0;
+  var sharedPolling = null;
+
+  function updateShareUI(message){
+    var btn = document.getElementById("shareBtn");
+    var text = document.getElementById("shareText");
+    if(!btn || !text) return;
+    btn.setAttribute("data-state", sharedId ? "synced" : "off");
+    text.textContent = message || (sharedId ? "Copy shared link" : "Create shared link");
+    btn.title = sharedId
+      ? "Anyone with this unique link can view and edit the same answers"
+      : "Create a unique link for live collaboration";
+  }
+
+  function sharedUrl(){
+    var u = new URL(window.location.href);
+    u.search = "";
+    u.hash = "";
+    u.searchParams.set("sheet", sharedId);
+    return u.toString();
+  }
+
+  function sharedRequest(method, body){
+    return fetch(SHARED_API + (method === "GET" ? "?id=" + encodeURIComponent(sharedId) : ""), {
+      method:method,
+      headers:{ "Content-Type":"application/json" },
+      body:method === "GET" ? undefined : JSON.stringify(body)
+    });
+  }
+
+  function sharedSaveQuestion(n, value){
+    if(!sharedId) return;
+    sharedRequest("PUT", { id:sharedId, question:n, answer:String(value || "") })
+      .then(function(res){ if(!res.ok) throw new Error("save"); return res.json(); })
+      .then(function(data){ sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0); updateShareUI("Shared ✓"); })
+      .catch(function(){ updateShareUI("Save pending"); });
+  }
+
+  function sharedSaveSoon(n, value){
+    if(!sharedId) return;
+    if(sharedTimers[n]) clearTimeout(sharedTimers[n]);
+    sharedTimers[n] = setTimeout(function(){ sharedTimers[n] = null; sharedSaveQuestion(n, value); }, 550);
+  }
+
+  function sharedSaveAll(){
+    if(!sharedId) return Promise.resolve();
+    return sharedRequest("POST", { id:sharedId, answers:answers })
+      .then(function(res){ if(!res.ok) throw new Error("save"); return res.json(); })
+      .then(function(data){ sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0); updateShareUI("Shared ✓"); })
+      .catch(function(){ updateShareUI("Save pending"); });
+  }
+
+  function applyShared(data){
+    if(!data || !data.answers) return;
+    QUESTIONS.forEach(function(item){
+      var incoming = typeof data.answers[item.n] === "string" ? data.answers[item.n]
+                   : typeof data.answers[String(item.n)] === "string" ? data.answers[String(item.n)] : "";
+      if(document.activeElement === nodes[item.n].ta) return;
+      answers[item.n] = incoming;
+      nodes[item.n].ta.value = incoming;
+    });
+    sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0);
+    saveNow();
+    refreshAll();
+    drawReview();
+    updateShareUI("Shared ✓");
+  }
+
+  function fetchShared(showError){
+    if(!sharedId) return;
+    sharedRequest("GET")
+      .then(function(res){
+        if(res.status === 404) throw new Error("missing");
+        if(!res.ok) throw new Error("load");
+        return res.json();
+      })
+      .then(function(data){
+        if((Number(data.updatedAt) || 0) >= sharedLastUpdate) applyShared(data);
+      })
+      .catch(function(err){
+        updateShareUI(err.message === "missing" ? "Link not found" : "Offline");
+        if(showError) toast(err.message === "missing" ? "This shared prep-sheet link does not exist" : "Could not load shared answers");
+      });
+  }
+
+  function createOrCopyShared(){
+    if(sharedId){ copyString(sharedUrl(), "Shared link copied"); return; }
+    sharedId = uuid();
+    STORE = "csa-prep-answers-v1-" + sharedId;
+    META_STORE = "csa-prep-meta-v1-" + sharedId;
+    try{ window.history.replaceState({}, "", "?sheet=" + encodeURIComponent(sharedId)); }catch(e){}
+    updateShareUI("Creating link…");
+    sharedSaveAll().then(function(){
+      copyString(sharedUrl(), "Shared link created and copied");
+      if(!sharedPolling) sharedPolling = setInterval(function(){ fetchShared(false); }, 2000);
+    });
+  }
+
+  function initShared(){
+    var btn = document.getElementById("shareBtn");
+    if(btn) btn.addEventListener("click", createOrCopyShared);
+    updateShareUI(sharedId ? "Loading shared…" : "Create shared link");
+    if(sharedId){
+      fetchShared(true);
+      sharedPolling = setInterval(function(){ fetchShared(false); }, 2000);
+    }
+  }
+
   /* ---------- Toast ---------- */
   var toastTimer = null;
   function toast(msg){
@@ -1439,6 +1566,7 @@
   refreshSyncStatus();
   updateSyncUI();
   if(syncOn()){ prepId(); setTimeout(flushOutbox, 600); }
+  initShared();
 })();
 </script>
 
