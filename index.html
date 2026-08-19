@@ -237,6 +237,23 @@
   }
   .toast.show{opacity:1;transform:translate(-50%,0)}
 
+  /* ---------- FBC / Franchise selection ---------- */
+  .assignment-card{
+    display:grid;grid-template-columns:1fr 1.45fr;gap:18px;
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    box-shadow:var(--shadow);padding:20px 22px;margin:0 0 18px;
+  }
+  .assignment-card h2{grid-column:1/-1;margin:0 0 -3px;color:var(--navy);font-size:18px}
+  .assignment-field label{display:block;margin:0 0 6px;color:var(--navy);font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+  .assignment-field select{
+    width:100%;min-height:46px;padding:10px 38px 10px 12px;
+    border:1px solid var(--line);border-radius:9px;background:#fcfdfe;color:var(--ink);
+    font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  .assignment-field select:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(29,122,196,.13)}
+  .assignment-field select:disabled{background:#eef2f5;color:#8b9aa5;cursor:not-allowed}
+  .assignment-help{grid-column:1/-1;margin:-7px 0 0;color:var(--muted);font-size:12.5px}
+
   /* ---------- Sync ---------- */
   .sync-pill{
     all:unset;box-sizing:border-box;
@@ -321,6 +338,8 @@
   }
   .print-head{display:none}
   @media (max-width:620px){
+    .assignment-card{grid-template-columns:1fr;padding:18px}
+    .assignment-card h2,.assignment-help{grid-column:1}
     .panel{padding-left:18px}
     .review{padding:20px 18px 18px}
     .kbd{display:none}
@@ -357,6 +376,18 @@
 
 <div class="wrap">
   <div class="print-head" id="printHead"></div>
+  <section class="assignment-card" aria-labelledby="assignmentTitle">
+    <h2 id="assignmentTitle">Select the FBC and franchise</h2>
+    <div class="assignment-field">
+      <label for="fbcSelect">Franchise Business Coach</label>
+      <select id="fbcSelect"><option value="">Select an FBC…</option></select>
+    </div>
+    <div class="assignment-field">
+      <label for="franchiseSelect">Franchise</label>
+      <select id="franchiseSelect" disabled><option value="">Select an FBC first…</option></select>
+    </div>
+    <p class="assignment-help" id="assignmentHelp">The franchise list will update automatically based on the selected FBC.</p>
+  </section>
   <h2 class="visually-hidden">The 12 questions</h2>
   <div id="cards"></div>
   <section id="review" class="review" aria-live="polite" hidden=""></section>
@@ -404,6 +435,7 @@
   var OUTBOX_KEY = "csa-prep-sync-outbox-v1";
   var SCHEMA_VERSION = 1;
   var APP_NAME = "CSA Opportunity Prep";
+  var FBC_FRANCHISE_ROWS = [["John Bunnell","Bill Palliser"],["Afonso Pinheiro","Caleb Crandall"],["CertaPro of Akron OH","Caleb Crandall"],["CertaPro of Anderson Greenville-West","Caleb Crandall"],["CertaPro of Bend OR","Caleb Crandall"],["CertaPro of Central SW Florida","Caleb Crandall"],["CertaPro of Charlottesville VA","Caleb Crandall"],["CertaPro of Ellicott City","Caleb Crandall"],["CertaPro of Fredericksburg VA","Caleb Crandall"],["CertaPro of Hanover - Chesterfield","Caleb Crandall"],["CertaPro of Harrisburg","Caleb Crandall"],["CertaPro of Jacksonville FL","Caleb Crandall"],["CertaPro of Jupiter FL","Caleb Crandall"],["CertaPro of Kennesaw and Alpharetta","Caleb Crandall"],["CertaPro of Kissimmee FL","Caleb Crandall"],["CertaPro of Midtown Atlanta GA","Caleb Crandall"],["CertaPro of North Canton","Caleb Crandall"],["CertaPro of North Miami","Caleb Crandall"],["CertaPro of NW Richmond and Midlothian","Caleb Crandall"],["CertaPro of Okanagan","Caleb Crandall"],["CertaPro of Pasadena","Caleb Crandall"],["CertaPro of Peachtree City and Coweta County","Caleb Crandall"],["CertaPro of Roswell","Caleb Crandall"],["CertaPro of South Bend IN","Caleb Crandall"],["CertaPro of Spartanburg","Caleb Crandall"],["CertaPro of The South Shore and Boston","Caleb Crandall"],["Kurt Holbrook","Caleb Crandall"],["Roy Jaime","Caleb Crandall"],["Scott Tomlinson","Caleb Crandall"],["Carrie Robinson","Caleb Crandall"],["CertaPro of Bordentown and Hamilton NJ","Caleb Crandall"],["CertaPro of Chantilly VA","Caleb Crandall"],["CertaPro of College Park MD","Caleb Crandall"],["CertaPro of Edison NJ","Caleb Crandall"],["CertaPro of Etobicoke ON","Caleb Crandall"],["CertaPro of Great Valley","Caleb Crandall"],["CertaPro of Loudoun VA","Caleb Crandall"],["CertaPro of New Bern-Jacksonville NC","Caleb Crandall"],["CertaPro of North Tucson","Caleb Crandall"],["CertaPro of North York ON","Caleb Crandall"],["CertaPro of Ottawa","Caleb Crandall"],["CertaPro of Ramsey","Caleb Crandall"],["CertaPro of Saskatoon","Caleb Crandall"],["CertaPro of Shenandoah Valley","Caleb Crandall"],["CertaPro of South Miami FL","Caleb Crandall"],["CertaPro of St Augustine FL","Caleb Crandall"],["CertaPro of Sterling-Reston-Herndon VA","Caleb Crandall"],["CertaPro of Tysons VA","Caleb Crandall"],["CertaPro of Virginia Peninsula","Caleb Crandall"],["CertaPro of Washington DC","Caleb Crandall"],["CertaPro Painters of Charleston","Caleb Crandall"],["Filippo Mainella","Caleb Crandall"],["Certa Nova Scotia","Dave Nolte"],["Barton","Graham Gibson"],["Bob Schneider","Graham Gibson"],["CertaPro of Carrollwood and Tampa","Graham Gibson"],["CertaPro of Central and Lower Bucks","Graham Gibson"],["CertaPro of East Tennessee","Graham Gibson"],["CertaPro of London ON","Graham Gibson"],["CertaPro of Waterloo Region and Guelph","Graham Gibson"],["Cincinnati and Northern Kentucky","Graham Gibson"],["Greg Reininga","Graham Gibson"],["Mitch Berliner","Graham Gibson"],["Robert Troxler","Graham Gibson"],["Sean Collins","Graham Gibson"],["Brad Price","Jacob McKeever (Inactive)"],["Brett Guggenheim","Jacob McKeever (Inactive)"],["CertaPro of Alexandria","Jacob McKeever (Inactive)"],["CertaPro of East York and Don Mills","Jacob McKeever (Inactive)"],["CertaPro of Gilbert","Jacob McKeever (Inactive)"],["CertaPro of Marietta","Jacob McKeever (Inactive)"],["CertaPro of Markham ON","Jacob McKeever (Inactive)"],["CertaPro of Minnetonka","Jacob McKeever (Inactive)"],["CertaPro of North Charlotte","Jacob McKeever (Inactive)"],["CertaPro of Richmond Hill and Vaughan ON","Jacob McKeever (Inactive)"],["CertaPro of Sonoma County","Jacob McKeever (Inactive)"],["CertaPro of the Grand and Niagara","Jacob McKeever (Inactive)"],["CertaPro Painters Eastside","Jacob McKeever (Inactive)"],["Chad Joy","Jacob McKeever (Inactive)"],["Doug Bland","Jacob McKeever (Inactive)"],["Gary Lentz","Jacob McKeever (Inactive)"],["Greg Gieseler","Jacob McKeever (Inactive)"],["Jeff Spoor","Jacob McKeever (Inactive)"],["John Antioco","Jacob McKeever (Inactive)"],["John Paulik","Jacob McKeever (Inactive)"],["John Villar","Jacob McKeever (Inactive)"],["Jon Harmsen","Jacob McKeever (Inactive)"],["Jose Oller","Jacob McKeever (Inactive)"],["Louis Federico","Jacob McKeever (Inactive)"],["Mara Chambers","Jacob McKeever (Inactive)"],["Marty Maglio","Jacob McKeever (Inactive)"],["Morlocks","Jacob McKeever (Inactive)"],["Nestor Di Marco","Jacob McKeever (Inactive)"],["Oswald Diaz","Jacob McKeever (Inactive)"],["Rich Carmosino","Jacob McKeever (Inactive)"],["Robert Jacques","Jacob McKeever (Inactive)"],["Scott Abel","Jacob McKeever (Inactive)"],["Soumil Amin","Jacob McKeever (Inactive)"],["Steven Lehman","Jacob McKeever (Inactive)"],["Tom Barbour","Jacob McKeever (Inactive)"],["TR Maloney","Jacob McKeever (Inactive)"],["William Tierney","Jacob McKeever (Inactive)"],["Adam Reissner","Jonathan Kittner"],["CertaPro of Danbury","Jonathan Kittner"],["CertaPro of Gainesville","Jonathan Kittner"],["CertaPro of Greenville East SC","Jonathan Kittner"],["CertaPro of La Grange IL","Jonathan Kittner"],["CertaPro of Lexington-Concord MA","Jonathan Kittner"],["CertaPro of Southwest Denver","Jonathan Kittner"],["CertaPro of Winnipeg MB","Jonathan Kittner"],["David Forman","Jonathan Kittner"],["Ed Medeiros","Jonathan Kittner"],["Cary Gabel","Karri Plecko"],["CertaPro of Ann Arbor","Karri Plecko"],["CertaPro of Bartlett","Karri Plecko"],["CertaPro of Belleville IL","Karri Plecko"],["CertaPro of Bethesda-Chevy Chase","Karri Plecko"],["CertaPro of Boca Raton","Karri Plecko"],["CertaPro of Clarksville-Hopkinsville","Karri Plecko"],["CertaPro of Concord and Manchester NH","Karri Plecko"],["CertaPro of Denton","Karri Plecko"],["CertaPro of Foxborough MA","Karri Plecko"],["CertaPro of Greystone","Karri Plecko"],["CertaPro of Hendersonville TN","Karri Plecko"],["CertaPro of Katy TX","Karri Plecko"],["CertaPro of Lakeland and Winter Haven FL","Karri Plecko"],["CertaPro of Lexington SC","Karri Plecko"],["CertaPro of Port St. Lucie","Karri Plecko"],["CertaPro of Provo","Karri Plecko"],["CertaPro of St. Joseph MI","Karri Plecko"],["CertaPro of Wilmington NC","Karri Plecko"],["Chris Leary","Karri Plecko"],["Elvis Ippoliti","Karri Plecko"],["Ernest Starr","Karri Plecko"],["Gerald Bushong","Karri Plecko"],["Jeff Chin","Karri Plecko"],["Kevin Howard","Karri Plecko"],["Lisa Allardi","Karri Plecko"],["Lisa Ressler","Karri Plecko"],["Michael Fetch","Karri Plecko"],["Mike Campbell","Karri Plecko"],["Randall Kramer","Karri Plecko"],["Ray Lubesky","Karri Plecko"],["Robert Vince","Karri Plecko"],["Steven Choi","Karri Plecko"],["Tracy Moore","Karri Plecko"],["CertaPro of Indianapolis and Dayton","Kieran McFadden"],["CertaPro of Melbourne FL","Kieran McFadden-CO"],["CertaPro of Orange County","Kieran McFadden-CO"],["CertaPro of San Francisco","Kieran McFadden-CO"],["Matt Hefter","Kieran McFadden-CO"],["Adrian Cox","Michael Chobanian"],["Andy Wiggins","Michael Chobanian"],["CertaPro Delaware","Michael Chobanian"],["CertaPro of Baltimore, Bel Air and Towson","Michael Chobanian"],["CertaPro of Central Arkansas","Michael Chobanian"],["CertaPro of Central Houston","Michael Chobanian"],["CertaPro of Columbia and Olney MD","Michael Chobanian"],["CertaPro of Downingtown and West Chester PA","Michael Chobanian"],["CertaPro of Germantown","Michael Chobanian"],["CertaPro of Gloucester and Salem Counties","Michael Chobanian"],["CertaPro of Middletown - Kingston","Michael Chobanian"],["CertaPro of Nashua NH and Westford MA","Michael Chobanian"],["CertaPro of Pittsburgh - South Hills","Michael Chobanian"],["CertaPro of Portland ME","Michael Chobanian"],["CertaPro of Ridgewood and Wayne","Michael Chobanian"],["CertaPro of Southern NH and Newburyport-Haverhill","Michael Chobanian"],["CertaPro of the Grand Rapids","Michael Chobanian"],["CertaPro Salt Lake City","Michael Chobanian"],["Costas","Michael Chobanian"],["Dennis Hodge","Michael Chobanian"],["Dominic Ventresca","Michael Chobanian"],["Frank Mai","Michael Chobanian"],["Hasan Dugme","Michael Chobanian"],["Jeff Ozdemir","Michael Chobanian"],["Jim LaFontaine","Michael Chobanian"],["Mark Cooper","Michael Chobanian"],["Olin Johnson","Michael Chobanian"],["Richard Webber","Michael Chobanian"],["Timothy Meade","Michael Chobanian"],["Tom Noonan","Michael Chobanian"],["Troy Hacker","Michael Chobanian"],["CertaPro of Albuquerque","Nichole Blankenship"],["CertaPro of Attleboro","Nichole Blankenship"],["CertaPro of Boise ID","Nichole Blankenship"],["CertaPro of Central Washington","Nichole Blankenship"],["CertaPro of Glen Ellyn","Nichole Blankenship"],["CertaPro of Greensboro","Nichole Blankenship"],["CertaPro of Lake Ray Hubbard TX","Nichole Blankenship"],["CertaPro of Olympia WA","Nichole Blankenship"],["CertaPro of Renton and Kent","Nichole Blankenship"],["CertaPro of Santa Monica","Nichole Blankenship"],["CertaPro of Sherman Oaks - Beverly Hills","Nichole Blankenship"],["CertaPro of Southern Maryland","Nichole Blankenship"],["CertaPro of Southern Montana","Nichole Blankenship"],["CertaPro of Southlake","Nichole Blankenship"],["CertaPro of Wichita East","Nichole Blankenship"],["CertaPro of Woodbridge VA","Nichole Blankenship"],["Dale Busic","Nichole Blankenship"],["Kevin Sullivan","Nichole Blankenship"],["Kirt Storch","Nichole Blankenship"],["Leonard Martinez","Nichole Blankenship"],["Marc Prive","Nichole Blankenship"],["Michael Goodwin","Nichole Blankenship"],["Oliver Guminski","Nichole Blankenship"],["Ottis Ballenger","Nichole Blankenship"],["Steve Jones","Nichole Blankenship"],["Steve Vertesch","Nichole Blankenship"],["William Shannon","Nichole Blankenship"],["Andrew Hoyt","Norm Murdock"],["Brendan McManus","Norm Murdock"],["CertaPro of Carlsbad","Norm Murdock"],["CertaPro of Hoover","Norm Murdock"],["CertaPro of League City and Galveston","Norm Murdock"],["CertaPro of Lexington and Louisville East","Norm Murdock"],["CertaPro of Nashville and Middle Tennessee","Norm Murdock"],["CertaPro of Needham","Norm Murdock"],["CertaPro of North San Diego","Norm Murdock"],["CertaPro of Northern AZ","Norm Murdock"],["CertaPro of Northwest Florida","Norm Murdock"],["CertaPro of Summerlin NV","Norm Murdock"],["David Messier","Norm Murdock"],["David Strahl","Norm Murdock"],["Gregg Wilde","Norm Murdock"],["Hicinbothems","Norm Murdock"],["Jim Zandee","Norm Murdock"],["Jon Ragsdale","Norm Murdock"],["Josh Soehner","Norm Murdock"],["Lee Sapata","Norm Murdock"],["Mark Potts","Norm Murdock"],["Mark Tunks","Norm Murdock"],["Matt Siebert","Norm Murdock"],["Michael Del Pellaro","Norm Murdock"],["Nathan Marmor","Norm Murdock"],["Rich Freddo","Norm Murdock"],["Steven Carey","Norm Murdock"],["Aaron Lewis","Pete Kusiak"],["CertaPro of Augusta and Columbia","Pete Kusiak"],["CertaPro of Calgary and Central Alberta","Pete Kusiak"],["CertaPro of Central IL","Pete Kusiak"],["CertaPro of Chicago Central","Pete Kusiak"],["CertaPro of Des Plaines - Chicago Northwest","Pete Kusiak"],["CertaPro of Greater Sacramento and San Joaquin Valley","Pete Kusiak"],["CertaPro of King of Prussia","Pete Kusiak"],["CertaPro of Naperville","Pete Kusiak"],["CertaPro of NE and NW San Antonio","Pete Kusiak"],["CertaPro of North Seattle","Pete Kusiak"],["CertaPro of Rhode Island","Pete Kusiak"],["CertaPro of Rock Hill Ft Mill and SW Charlotte","Pete Kusiak"],["CertaPro of Shawnee Mission","Pete Kusiak"],["CertaPro of South Charlotte","Pete Kusiak"],["CertaPro of the Main Line","Pete Kusiak"],["Gary House","Pete Kusiak"],["Gary Sabean","Pete Kusiak"],["Harold Lloyd","Pete Kusiak"],["Jack McMenamin","Pete Kusiak"],["Jake Kiser","Pete Kusiak"],["James Ploughe","Pete Kusiak"],["Jarrod Esser","Pete Kusiak"],["Jeff Dahlin","Pete Kusiak"],["John Jordan","Pete Kusiak"],["Kevin Holmberg","Pete Kusiak"],["Peter Throndson","Pete Kusiak"],["Rob Smith","Pete Kusiak"],["Scott Mitchell","Pete Kusiak"],["Steve Weiland","Pete Kusiak"],["Alan Phillips","Robert Warmka"],["Bill Sharp","Robert Warmka"],["Brian Brown","Robert Warmka"],["CertaPro of Arvada","Robert Warmka"],["CertaPro of Chapel Hill and Clayton-Wilson","Robert Warmka"],["CertaPro of Columbus GA","Robert Warmka"],["CertaPro of Denver and Aurora","Robert Warmka"],["CertaPro of Duluth and Norcross GA","Robert Warmka"],["CertaPro of Highlands Ranch","Robert Warmka"],["CertaPro of Hilton Head SC","Robert Warmka"],["CertaPro of Huntsville","Robert Warmka"],["CertaPro of Reno","Robert Warmka"],["CertaPro of Savannah","Robert Warmka"],["CertaPro of South Metro","Robert Warmka"],["CertaPro of Southwest Florida","Robert Warmka"],["CertaPro of Syracuse-Central NY","Robert Warmka"],["CertaPro of Twin Cities East","Robert Warmka"],["CertaPro South Denver","Robert Warmka"],["Douglas Sokolowski","Robert Warmka"],["Edwards","Robert Warmka"],["Kevin Henderson","Robert Warmka"],["Neil Covaleski","Robert Warmka"],["Nick Murray","Robert Warmka"],["Norris","Robert Warmka"],["Wes Maier","Robert Warmka"],["Columbus Commercial","Ronnie Kimble"],["Columbus Residential","Ronnie Kimble"],["Rob James","Ronnie Kimble"],["Bob Jamrog","Steven Prendes"],["CertaPro Laval","Steven Prendes"],["CertaPro of Andover","Steven Prendes"],["CertaPro of Bay Shore NY","Steven Prendes"],["CertaPro of Birmingham and Troy MI","Steven Prendes"],["CertaPro of Boynton Beach and West Palm Beach","Steven Prendes"],["CertaPro of Chesapeake and Virginia Beach VA","Steven Prendes"],["CertaPro of Durham NC","Steven Prendes"],["CertaPro of Edmonton","Steven Prendes"],["CertaPro of Hoboken","Steven Prendes"],["CertaPro of Livingston NJ","Steven Prendes"],["CertaPro of Massapequa NY","Steven Prendes"],["CertaPro of Mountainside","Steven Prendes"],["CertaPro of North Vancouver","Steven Prendes"],["CertaPro of Pittsburgh East PA","Steven Prendes"],["CertaPro of Regina","Steven Prendes"],["CertaPro of Rockville-Potomac","Steven Prendes"],["CertaPro of St. Louis County and Madison County","Steven Prendes"],["CertaPro of Staten Island","Steven Prendes"],["CertaPro of Toms River","Steven Prendes"],["CertaPro of Toronto - Forest Hills and Rosedale","Steven Prendes"],["CertaPro of Winston Salem","Steven Prendes"],["Jack Zupan","Steven Prendes"],["John Coleman","Steven Prendes"],["John Fecile","Steven Prendes"],["Peter Wilkes","Steven Prendes"]];
   var SHARED_API = "https://csa-prep-sheet.jamesehigh.chatgpt.site/api/sheets";
   var sharedId = "";
   try{
@@ -465,6 +497,84 @@
   function lsDel(k){ try{ window.localStorage.removeItem(k); }catch(e){} }
 
   var answers = load();
+
+  var SELECTION_STORE = "csa-prep-fbc-franchise-v1" + (sharedId ? "-" + sharedId : "");
+  var fbcMap = {};
+  FBC_FRANCHISE_ROWS.forEach(function(row){
+    var franchise = row[0], fbc = row[1];
+    if(!fbcMap[fbc]) fbcMap[fbc] = [];
+    fbcMap[fbc].push(franchise);
+  });
+  Object.keys(fbcMap).forEach(function(fbc){
+    fbcMap[fbc].sort(function(a,b){ return a.localeCompare(b); });
+  });
+  var assignment = (function(){
+    try{
+      var saved = JSON.parse(lsGet(SELECTION_STORE) || "null");
+      if(saved && typeof saved === "object") return {
+        fbc:typeof saved.fbc === "string" ? saved.fbc : "",
+        franchise:typeof saved.franchise === "string" ? saved.franchise : ""
+      };
+    }catch(e){}
+    return { fbc:"", franchise:"" };
+  })();
+
+  function saveAssignmentLocal(){ lsSet(SELECTION_STORE, JSON.stringify(assignment)); }
+
+  function fillFranchises(){
+    var select = document.getElementById("franchiseSelect");
+    if(!select) return;
+    select.innerHTML = "";
+    var first = document.createElement("option");
+    first.value = "";
+    first.textContent = assignment.fbc ? "Select a franchise…" : "Select an FBC first…";
+    select.appendChild(first);
+    (fbcMap[assignment.fbc] || []).forEach(function(name){
+      var option = document.createElement("option");
+      option.value = name;
+      option.textContent = name;
+      select.appendChild(option);
+    });
+    select.disabled = !assignment.fbc;
+    select.value = (fbcMap[assignment.fbc] || []).indexOf(assignment.franchise) >= 0 ? assignment.franchise : "";
+  }
+
+  function initAssignments(){
+    var fbcSelect = document.getElementById("fbcSelect");
+    var franchiseSelect = document.getElementById("franchiseSelect");
+    if(!fbcSelect || !franchiseSelect) return;
+    Object.keys(fbcMap).sort(function(a,b){ return a.localeCompare(b); }).forEach(function(name){
+      var option = document.createElement("option");
+      option.value = name;
+      option.textContent = name;
+      fbcSelect.appendChild(option);
+    });
+    fbcSelect.value = fbcMap[assignment.fbc] ? assignment.fbc : "";
+    if(!fbcSelect.value){ assignment.fbc = ""; assignment.franchise = ""; }
+    fillFranchises();
+    fbcSelect.addEventListener("change", function(){
+      assignment.fbc = fbcSelect.value;
+      assignment.franchise = "";
+      saveAssignmentLocal();
+      fillFranchises();
+      sharedSaveField("fbc", assignment.fbc);
+      sharedSaveField("franchise", "");
+    });
+    franchiseSelect.addEventListener("change", function(){
+      assignment.franchise = franchiseSelect.value;
+      saveAssignmentLocal();
+      sharedSaveField("franchise", assignment.franchise);
+    });
+  }
+
+  function applyAssignment(fbc, franchise){
+    assignment.fbc = typeof fbc === "string" && fbcMap[fbc] ? fbc : "";
+    assignment.franchise = typeof franchise === "string" ? franchise : "";
+    saveAssignmentLocal();
+    var fbcSelect = document.getElementById("fbcSelect");
+    if(fbcSelect) fbcSelect.value = assignment.fbc;
+    fillFranchises();
+  }
 
   /* A stable id for this prep sheet, so the external list updates one row
      rather than piling up duplicates. New sheet on "Start over". */
@@ -1014,6 +1124,9 @@
     QUESTIONS.forEach(function(item){ delete answers[item.n]; });
     saveNow();
     QUESTIONS.forEach(function(item){ nodes[item.n].ta.value = ""; });
+    assignment = { fbc:"", franchise:"" };
+    lsDel(SELECTION_STORE);
+    applyAssignment("", "");
     /* A fresh id, so the new prep sheet becomes its own row and the finished
        one already in SharePoint is left intact. */
     meta.prepId = "";
@@ -1444,6 +1557,14 @@
       .catch(function(){ updateShareUI("Save pending"); });
   }
 
+  function sharedSaveField(field, value){
+    if(!sharedId) return;
+    sharedRequest("PUT", { id:sharedId, field:field, value:String(value || "") })
+      .then(function(res){ if(!res.ok) throw new Error("save"); return res.json(); })
+      .then(function(data){ sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0); updateShareUI("Shared ✓"); })
+      .catch(function(){ updateShareUI("Save pending"); });
+  }
+
   function sharedSaveSoon(n, value){
     if(!sharedId) return;
     if(sharedTimers[n]) clearTimeout(sharedTimers[n]);
@@ -1452,7 +1573,7 @@
 
   function sharedSaveAll(){
     if(!sharedId) return Promise.resolve();
-    return sharedRequest("POST", { id:sharedId, answers:answers })
+    return sharedRequest("POST", { id:sharedId, fbc:assignment.fbc, franchise:assignment.franchise, answers:answers })
       .then(function(res){ if(!res.ok) throw new Error("save"); return res.json(); })
       .then(function(data){ sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0); updateShareUI("Shared ✓"); })
       .catch(function(){ updateShareUI("Save pending"); });
@@ -1460,6 +1581,7 @@
 
   function applyShared(data){
     if(!data || !data.answers) return;
+    applyAssignment(data.fbc || "", data.franchise || "");
     QUESTIONS.forEach(function(item){
       var incoming = typeof data.answers[item.n] === "string" ? data.answers[item.n]
                    : typeof data.answers[String(item.n)] === "string" ? data.answers[String(item.n)] : "";
@@ -1526,6 +1648,7 @@
 
   /* ---------- Start ---------- */
   build();
+  initAssignments();
   refreshAll();
   if(!storageOK) setFootWarning();
 
