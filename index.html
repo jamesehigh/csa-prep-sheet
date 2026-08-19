@@ -205,6 +205,14 @@
     color:var(--ink);
   }
   textarea:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(29,122,196,.13)}
+  .fbc-notes{
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    box-shadow:var(--shadow);padding:20px 22px;margin:18px 0 8px;
+  }
+  .fbc-notes label{display:block;margin:0 0 6px;color:var(--navy);font-size:18px;font-weight:700}
+  .fbc-notes p{margin:0 0 11px;color:var(--muted);font-size:13.5px}
+  .fbc-notes textarea{display:block;min-height:132px;max-height:132px;overflow:auto;transition:max-height .18s ease}
+  .fbc-notes textarea:focus{max-height:none;resize:vertical}
   .row{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
   .btn{
     all:unset;cursor:pointer;font-weight:600;font-size:14.5px;
@@ -325,7 +333,7 @@
     *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
   }
   @media print{
-    header.top,.bar,.kbd,.toast,#cards,.foot,.modal-back,.sync-note{display:none!important}
+    header.top,.bar,.kbd,.toast,#cards,.fbc-notes,.foot,.modal-back,.sync-note{display:none!important}
     body{background:#fff}
     .wrap{max-width:none;padding:0}
     .review{border:none;box-shadow:none;padding:0;margin:0}
@@ -390,6 +398,11 @@
   </section>
   <h2 class="visually-hidden">The 12 questions</h2>
   <div id="cards"></div>
+  <section class="fbc-notes" aria-labelledby="fbcNotesLabel">
+    <label id="fbcNotesLabel" for="fbcNotes">FBC Notes</label>
+    <p>Enter any additional coaching notes. Click inside the box to expand and view the full entry.</p>
+    <textarea id="fbcNotes" placeholder="Enter FBC notes…"></textarea>
+  </section>
   <section id="review" class="review" aria-live="polite" hidden=""></section>
   <p class="foot" id="foot">Answers save automatically in this browser.</p>
 </div>
@@ -549,6 +562,8 @@
                       : typeof nextAnswers[String(item.n)] === "string" ? nextAnswers[String(item.n)] : "";
       if(nodes[item.n]) nodes[item.n].ta.value = answers[item.n];
     });
+    answers.fbcNotes = typeof nextAnswers.fbcNotes === "string" ? nextAnswers.fbcNotes : "";
+    if(fbcNotesEl){ fbcNotesEl.value = answers.fbcNotes; collapseFbcNotes(); }
     saveNow();
     refreshAll();
     drawReview();
@@ -674,7 +689,37 @@
   var openN = null;
   var cardsEl = document.getElementById("cards");
   var reviewEl = document.getElementById("review");
+  var fbcNotesEl = document.getElementById("fbcNotes");
   var nodes = {}; /* n -> {card, btn, num, tagWrap, preview, panel, ta} */
+
+  function expandFbcNotes(){
+    if(!fbcNotesEl) return;
+    fbcNotesEl.style.height = "auto";
+    fbcNotesEl.style.height = Math.max(132, fbcNotesEl.scrollHeight + 2) + "px";
+  }
+  function collapseFbcNotes(){
+    if(!fbcNotesEl) return;
+    fbcNotesEl.style.height = "132px";
+  }
+  function initFbcNotes(){
+    if(!fbcNotesEl) return;
+    fbcNotesEl.value = typeof answers.fbcNotes === "string" ? answers.fbcNotes : "";
+    fbcNotesEl.addEventListener("focus", expandFbcNotes);
+    fbcNotesEl.addEventListener("click", expandFbcNotes);
+    fbcNotesEl.addEventListener("input", function(){
+      answers.fbcNotes = fbcNotesEl.value;
+      expandFbcNotes();
+      save();
+      drawReview();
+      sharedSaveNotesSoon();
+    });
+    fbcNotesEl.addEventListener("blur", function(){
+      saveNow();
+      sharedSaveAll();
+      collapseFbcNotes();
+    });
+    collapseFbcNotes();
+  }
 
   function val(n){
     var v = answers[n];
@@ -905,7 +950,7 @@
 
   /* ---------- Review ---------- */
   var reviewBuilt = false;
-  var reviewLead, reviewRows = {};
+  var reviewLead, reviewRows = {}, reviewNotes;
 
   function buildReview(){
     var h2 = document.createElement("h2");
@@ -931,6 +976,18 @@
       reviewEl.appendChild(qa);
       reviewRows[item.n] = a;
     });
+
+    var notesQa = document.createElement("div");
+    notesQa.className = "qa";
+    var notesQ = document.createElement("p");
+    notesQ.className = "q";
+    notesQ.textContent = "FBC Notes";
+    reviewNotes = document.createElement("p");
+    reviewNotes.className = "a empty";
+    reviewNotes.textContent = "No notes yet";
+    notesQa.appendChild(notesQ);
+    notesQa.appendChild(reviewNotes);
+    reviewEl.appendChild(notesQa);
 
     var bar = document.createElement("div");
     bar.className = "bar";
@@ -964,11 +1021,16 @@
      all twelve on every keystroke, which made long answers feel laggy. */
   function drawReview(onlyN){
     var done = answeredCount();
-    if(!done){ reviewEl.hidden = true; return; }
+    var notes = typeof answers.fbcNotes === "string" ? answers.fbcNotes.trim() : "";
+    if(!done && !notes){ reviewEl.hidden = true; return; }
     var justBuilt = false;
     if(!reviewBuilt){ buildReview(); justBuilt = true; }
     reviewEl.hidden = false;
     reviewLead.textContent = done + " of " + TOTAL + " questions answered. Click any question above to revise.";
+    if(reviewNotes){
+      reviewNotes.className = "a" + (notes ? "" : " empty");
+      reviewNotes.textContent = notes || "No notes yet";
+    }
     var paint = function(item){
       var a = val(item.n);
       var el = reviewRows[item.n];
@@ -998,6 +1060,8 @@
       out += item.n + ". " + item.q + (item.key ? "  (priority)" : "") + nl;
       out += (val(item.n) || "[no answer]").replace(/\r?\n/g, nl) + nl + nl;
     });
+    out += "FBC NOTES" + nl;
+    out += ((typeof answers.fbcNotes === "string" && answers.fbcNotes.trim()) ? answers.fbcNotes : "[no notes]").replace(/\r?\n/g, nl) + nl + nl;
     out += answeredCount() + " of " + TOTAL + " questions answered." + nl;
     return out;
   }
@@ -1088,6 +1152,10 @@
       QUESTIONS.forEach(function(item){
         nodes[item.n].ta.value = (typeof answers[item.n] === "string") ? answers[item.n] : "";
       });
+      if(fbcNotesEl){
+        fbcNotesEl.value = typeof answers.fbcNotes === "string" ? answers.fbcNotes : "";
+        collapseFbcNotes();
+      }
       refreshAll();
       drawReview();
       sharedSaveAll();
@@ -1103,6 +1171,7 @@
       var clone = document.documentElement.cloneNode(true);
       var g = function(sel){ return clone.querySelector(sel); };
       var cards = g("#cards"); if(cards) cards.innerHTML = "";
+      var fn = g("#fbcNotes"); if(fn){ fn.value = ""; fn.textContent = ""; fn.removeAttribute("style"); }
       var rev = g("#review"); if(rev){ rev.innerHTML = ""; rev.setAttribute("hidden", ""); }
       var ph = g("#printHead"); if(ph) ph.innerHTML = "";
       var t = g("#toast"); if(t){ t.className = "toast"; t.textContent = ""; }
@@ -1186,8 +1255,10 @@
   function startOver(){
     if(!window.confirm("Clear all 12 answers and start over?")) return;
     QUESTIONS.forEach(function(item){ delete answers[item.n]; });
+    delete answers.fbcNotes;
     saveNow();
     QUESTIONS.forEach(function(item){ nodes[item.n].ta.value = ""; });
+    if(fbcNotesEl){ fbcNotesEl.value = ""; collapseFbcNotes(); }
     assignment = { fbc:"", franchise:"" };
     lsDel(SELECTION_STORE);
     applyAssignment("", "");
@@ -1649,6 +1720,15 @@
     sharedTimers[n] = setTimeout(function(){ sharedTimers[n] = null; sharedSaveQuestion(n, value); }, 550);
   }
 
+  function sharedSaveNotesSoon(){
+    if(!sharedId) return;
+    if(sharedTimers.fbcNotes) clearTimeout(sharedTimers.fbcNotes);
+    sharedTimers.fbcNotes = setTimeout(function(){
+      sharedTimers.fbcNotes = null;
+      sharedSaveAll();
+    }, 550);
+  }
+
   function sharedSaveAll(){
     if(!sharedId) return Promise.resolve();
     return sharedRequest("POST", { id:sharedId, fbc:assignment.fbc, franchise:assignment.franchise, answers:answers })
@@ -1667,6 +1747,10 @@
       answers[item.n] = incoming;
       nodes[item.n].ta.value = incoming;
     });
+    if(document.activeElement !== fbcNotesEl){
+      answers.fbcNotes = typeof data.answers.fbcNotes === "string" ? data.answers.fbcNotes : "";
+      if(fbcNotesEl){ fbcNotesEl.value = answers.fbcNotes; collapseFbcNotes(); }
+    }
     sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0);
     saveNow();
     if(assignment.fbc && assignment.franchise) saveScopeLocal(assignment.fbc, assignment.franchise);
@@ -1727,6 +1811,7 @@
 
   /* ---------- Start ---------- */
   build();
+  initFbcNotes();
   initAssignments();
   refreshAll();
   if(!storageOK) setFootWarning();
