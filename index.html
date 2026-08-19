@@ -1269,6 +1269,10 @@
   }
 
   function startOver(){
+    if(sharedActive() && (!assignment.fbc || !assignment.franchise)){
+      toast("Select an FBC and franchise before using Start over");
+      return;
+    }
     var sharedRecord = sharedActive() && assignment.fbc && assignment.franchise;
     var prompt = sharedRecord
       ? "Clear all 12 answers and FBC Notes for " + assignment.franchise + "? This will clear the record for everyone using the shared sheet."
@@ -1312,11 +1316,6 @@
     meta.prepId = "";
     lsDel(META_STORE);
     writeOutbox([]);
-    if(sharedId){
-      sharedId = "";
-      try{ window.history.replaceState({}, "", window.location.pathname); }catch(e){}
-      updateShareUI();
-    }
     toast("Cleared — starting over");
   }
 
