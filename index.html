@@ -613,7 +613,6 @@
   }
 
   var assignmentSwitching = false;
-  var preserveUnscopedOnNextFranchise = !assignment.fbc && !assignment.franchise && answeredCount() > 0;
   function switchAssignment(nextFbc, nextFranchise){
     var oldFbc = assignment.fbc;
     var oldFranchise = assignment.franchise;
@@ -622,30 +621,13 @@
     if(oldFbc === nextFbc && oldFranchise === nextFranchise) return;
 
     assignmentSwitching = true;
-    if(!nextFranchise){
-      preserveUnscopedOnNextFranchise = !oldComplete && answeredCount() > 0;
-    }
     if(oldComplete){ saveScopeLocal(oldFbc, oldFranchise); }
     var saveOld = oldComplete ? sharedSaveAll() : Promise.resolve();
     saveOld.then(function(){
       applyAssignment(nextFbc, nextFranchise);
       sharedLastUpdate = 0;
-      if(oldComplete){
-        showScopeAnswers(nextComplete ? loadScopeLocal(nextFbc, nextFranchise) : {});
-      }
-      return sharedSetAssignment(nextFbc, nextFranchise);
-    }).then(function(){
-      if(!nextComplete) return;
-      if(!oldComplete){
-        if(preserveUnscopedOnNextFranchise){
-          preserveUnscopedOnNextFranchise = false;
-          saveScopeLocal(nextFbc, nextFranchise);
-          return sharedSaveAll();
-        }
-        showScopeAnswers(loadScopeLocal(nextFbc, nextFranchise));
-        return fetchShared(true);
-      }
-      return fetchShared(true);
+      showScopeAnswers(nextComplete ? loadScopeLocal(nextFbc, nextFranchise) : {});
+      return nextComplete ? fetchShared(true) : Promise.resolve();
     }).finally(function(){
       assignmentSwitching = false;
       toast(nextComplete ? "Loaded responses for " + nextFranchise : "Select a franchise to load its responses");
@@ -1815,7 +1797,9 @@
   build();
   initFbcNotes();
   initAssignments();
-  refreshAll();
+  showScopeAnswers(assignment.fbc && assignment.franchise
+    ? loadScopeLocal(assignment.fbc, assignment.franchise)
+    : {});
   if(!storageOK) setFootWarning();
 
   var firstOpen = 1;
