@@ -1319,11 +1319,6 @@
     bar.appendChild(mkBtn("btn primary", "Download answers", downloadAnswers));
     bar.appendChild(mkBtn("btn ghost", "Copy all", copyAll));
     bar.appendChild(mkBtn("btn ghost", "Print / save as PDF", printSheet));
-    bar.appendChild(mkBtn("btn ghost", "Export data (.json)", exportData));
-    bar.appendChild(mkBtn("btn ghost", "Import data", function(){
-      var f = document.getElementById("importFile");
-      if(f){ f.value = ""; f.click(); }
-    }));
     bar.appendChild(mkBtn("btn ghost", "Download app (share)", downloadApp));
     if(!franchiseAccessToken) bar.appendChild(mkBtn("btn danger", "Start over", startOver));
     reviewEl.appendChild(bar);
