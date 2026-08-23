@@ -494,6 +494,7 @@
       <h3>Uploaded Proposals</h3>
       <div id="franchiseProposalList"><p class="proposal-help">No proposals uploaded yet.</p></div>
     </div>
+    <button type="button" class="btn danger" id="franchiseStartOverBtn">Clear My Answers &amp; Start Over</button>
   </aside>
   <div class="wrap">
   <div class="print-head" id="printHead"></div>
@@ -704,6 +705,28 @@
 
   function scopeStoreKey(fbc, franchise){
     return STORE + "::scope::" + encodeURIComponent(fbc) + "::" + encodeURIComponent(franchise);
+  }
+
+  var MASTER_VIEW_CLEAR_STORE = "csa-master-view-clears-v1";
+  function masterViewClearKey(){
+    return (sharedId || PRIMARY_SHARED_ID) + "::" + encodeURIComponent(assignment.fbc || "") + "::" + encodeURIComponent(assignment.franchise || "");
+  }
+  function masterViewCleared(){
+    if(franchiseAccessToken || !assignment.fbc || !assignment.franchise) return false;
+    try{
+      var cleared = JSON.parse(lsGet(MASTER_VIEW_CLEAR_STORE) || "{}");
+      return !!cleared[masterViewClearKey()];
+    }catch(e){ return false; }
+  }
+  function setMasterViewCleared(value){
+    if(franchiseAccessToken || !assignment.fbc || !assignment.franchise) return;
+    try{
+      var cleared = JSON.parse(lsGet(MASTER_VIEW_CLEAR_STORE) || "{}");
+      if(!cleared || typeof cleared !== "object" || Array.isArray(cleared)) cleared = {};
+      if(value) cleared[masterViewClearKey()] = Date.now();
+      else delete cleared[masterViewClearKey()];
+      lsSet(MASTER_VIEW_CLEAR_STORE, JSON.stringify(cleared));
+    }catch(e){}
   }
 
   function saveScopeLocal(fbc, franchise){
@@ -1560,7 +1583,9 @@
     }
     var sharedRecord = sharedActive() && assignment.fbc && assignment.franchise;
     var prompt = sharedRecord
-      ? "Clear all 12 answers and FBC Notes for " + assignment.franchise + "? This will clear the record for everyone using the shared sheet."
+      ? (franchiseAccessToken
+          ? "Clear all 12 answers and FBC Notes for your franchise and start over? This cannot be undone."
+          : "Clear all 12 answers and FBC Notes from the Master view for " + assignment.franchise + "? The Franchise Link answers will be preserved.")
       : "Clear all 12 answers and start over?";
     if(!window.confirm(prompt)) return;
     if(saveTimer){ clearTimeout(saveTimer); saveTimer = null; }
@@ -1577,6 +1602,13 @@
     drawReview();
     openCard(1);
 
+    if(sharedRecord && !franchiseAccessToken){
+      setMasterViewCleared(true);
+      saveScopeLocal(assignment.fbc, assignment.franchise);
+      toast("Cleared from Master view; Franchise Link answers preserved");
+      return;
+    }
+
     if(sharedRecord){
       sharedRequest("POST", {
         id:sharedId,
@@ -1587,7 +1619,7 @@
         .then(function(data){
           sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0);
           updateShareUI("Shared ✓");
-          toast("Cleared for everyone");
+          toast(franchiseAccessToken ? "Your answers were cleared" : "Cleared");
         })
         .catch(function(){ updateShareUI("Clear pending"); toast("Cleared here — shared clear is pending"); });
       return;
@@ -2087,6 +2119,11 @@
     }else if((data.fbc || "") !== assignment.fbc || (data.franchise || "") !== assignment.franchise){
       return;
     }
+    if(!franchiseAccessToken && masterViewCleared()){
+      sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0);
+      updateShareUI("Shared ✓");
+      return;
+    }
     var remoteClear = QUESTIONS.every(function(item){
       var value = typeof data.answers[item.n] === "string" ? data.answers[item.n]
                 : typeof data.answers[String(item.n)] === "string" ? data.answers[String(item.n)] : null;
@@ -2239,7 +2276,10 @@
       headers:proposalHeaders()
     })
       .then(function(res){ return res.json().then(function(data){ if(!res.ok) throw new Error(data.error || "Delete failed"); return data; }); })
-      .then(function(){ toast("PDF deleted"); loadProposals(); })
+      .then(function(data){
+        toast(data && data.hidden ? "Removed from Master view; Franchise Link copy preserved" : "PDF deleted");
+        loadProposals();
+      })
       .catch(function(err){ toast(err.message || "Could not delete PDF"); });
   }
 
@@ -2347,6 +2387,8 @@
   function initProposals(){
     var uploadButton = document.getElementById("proposalUploadBtn");
     if(uploadButton) uploadButton.addEventListener("click", uploadProposal);
+    var franchiseStartOverButton = document.getElementById("franchiseStartOverBtn");
+    if(franchiseStartOverButton) franchiseStartOverButton.addEventListener("click", startOver);
     var refreshButton = document.getElementById("proposalRefreshBtn");
     if(refreshButton) refreshButton.addEventListener("click", function(){ loadProposals(); toast("Proposal repository refreshed"); });
     document.addEventListener("click", function(event){
