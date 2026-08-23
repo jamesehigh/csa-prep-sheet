@@ -380,7 +380,7 @@
     .bar .btn{flex:1 1 auto}
   }
 </style>
-</head>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>\n</head>
 <body>
 
 <header class="top">
@@ -423,6 +423,8 @@
     <p class="assignment-help" id="assignmentHelp">The franchise list updates for the selected FBC. Your selection is private to your browser; other people using this link can work in different records at the same time.</p>
     <div class="assignment-actions" id="assignmentActions">
       <button type="button" class="btn ghost" id="franchiseLinkBtn">Create Franchise Link</button>
+      <button type="button" class="btn ghost" id="importMappingBtn">Upload FBC/Franchise Excel</button>
+      <button type="button" class="btn ghost" id="exportMappingBtn">Export FBC/Franchise Excel</button>
     </div>
   </section>
   <p class="selection-gate" id="selectionGate">Select an FBC and franchise to open Questions 1–12 and FBC Notes.</p>
@@ -438,6 +440,7 @@
 </div>
 
 <input type="file" id="importFile" accept="application/json,.json" class="visually-hidden" aria-hidden="true" tabindex="-1">
+<input type="file" id="mappingImportFile" accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" class="visually-hidden" aria-hidden="true" tabindex="-1">
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -480,6 +483,17 @@
   var APP_NAME = "CSA Opportunity Prep";
   var PRIMARY_SHARED_ID = "5444dfa0-e19c-42d1-8f40-4f97a2382c76";
   var FBC_FRANCHISE_ROWS = [["John Bunnell","Bill Palliser"],["Afonso Pinheiro","Caleb Crandall"],["CertaPro of Akron OH","Caleb Crandall"],["CertaPro of Anderson Greenville-West","Caleb Crandall"],["CertaPro of Bend OR","Caleb Crandall"],["CertaPro of Central SW Florida","Caleb Crandall"],["CertaPro of Charlottesville VA","Caleb Crandall"],["CertaPro of Ellicott City","Caleb Crandall"],["CertaPro of Fredericksburg VA","Caleb Crandall"],["CertaPro of Hanover - Chesterfield","Caleb Crandall"],["CertaPro of Harrisburg","Caleb Crandall"],["CertaPro of Jacksonville FL","Caleb Crandall"],["CertaPro of Jupiter FL","Caleb Crandall"],["CertaPro of Kennesaw and Alpharetta","Caleb Crandall"],["CertaPro of Kissimmee FL","Caleb Crandall"],["CertaPro of Midtown Atlanta GA","Caleb Crandall"],["CertaPro of North Canton","Caleb Crandall"],["CertaPro of North Miami","Caleb Crandall"],["CertaPro of NW Richmond and Midlothian","Caleb Crandall"],["CertaPro of Okanagan","Caleb Crandall"],["CertaPro of Pasadena","Caleb Crandall"],["CertaPro of Peachtree City and Coweta County","Caleb Crandall"],["CertaPro of Roswell","Caleb Crandall"],["CertaPro of South Bend IN","Caleb Crandall"],["CertaPro of Spartanburg","Caleb Crandall"],["CertaPro of The South Shore and Boston","Caleb Crandall"],["Kurt Holbrook","Caleb Crandall"],["Roy Jaime","Caleb Crandall"],["Scott Tomlinson","Caleb Crandall"],["CertaPro of Bordentown and Hamilton NJ","Carrie Robinson"],["CertaPro of Chantilly VA","Carrie Robinson"],["CertaPro of College Park MD","Carrie Robinson"],["CertaPro of Edison NJ","Carrie Robinson"],["CertaPro of Etobicoke ON","Carrie Robinson"],["CertaPro of Great Valley","Carrie Robinson"],["CertaPro of Loudoun VA","Carrie Robinson"],["CertaPro of New Bern-Jacksonville NC","Carrie Robinson"],["CertaPro of North Tucson","Carrie Robinson"],["CertaPro of North York ON","Carrie Robinson"],["CertaPro of Ottawa","Carrie Robinson"],["CertaPro of Ramsey","Carrie Robinson"],["CertaPro of Saskatoon","Carrie Robinson"],["CertaPro of Shenandoah Valley","Carrie Robinson"],["CertaPro of South Miami FL","Carrie Robinson"],["CertaPro of St Augustine FL","Carrie Robinson"],["CertaPro of Sterling-Reston-Herndon VA","Carrie Robinson"],["CertaPro of Tysons VA","Carrie Robinson"],["CertaPro of Virginia Peninsula","Carrie Robinson"],["CertaPro of Washington DC","Carrie Robinson"],["CertaPro Painters of Charleston","Carrie Robinson"],["Filippo Mainella","Carrie Robinson"],["Certa Nova Scotia","Dave Nolte"],["Mark Marrs (Inactive)","Dave Nolte"],["Barton","Graham Gibson"],["Bob Schneider","Graham Gibson"],["CertaPro of Carrollwood and Tampa","Graham Gibson"],["CertaPro of Central and Lower Bucks","Graham Gibson"],["CertaPro of East Tennessee","Graham Gibson"],["CertaPro of London ON","Graham Gibson"],["CertaPro of Waterloo Region and Guelph","Graham Gibson"],["Cincinnati and Northern Kentucky","Graham Gibson"],["Greg Reininga","Graham Gibson"],["Mitch Berliner","Graham Gibson"],["Robert Troxler","Graham Gibson"],["Sean Collins","Graham Gibson"],["Adam Reissner","Jonathan Kittner"],["CertaPro of Danbury","Jonathan Kittner"],["CertaPro of Gainesville","Jonathan Kittner"],["CertaPro of Greenville East SC","Jonathan Kittner"],["CertaPro of La Grange IL","Jonathan Kittner"],["CertaPro of Lexington-Concord MA","Jonathan Kittner"],["CertaPro of Southwest Denver","Jonathan Kittner"],["CertaPro of Winnipeg MB","Jonathan Kittner"],["David Forman","Jonathan Kittner"],["Ed Medeiros","Jonathan Kittner"],["CertaPro AME (Inactive)","Jonathan Kittner"],["CertaPro of Aurora-Oswego-Yorkville (Inactive)","Jonathan Kittner"],["CertaPro of Clayton and Wilson NC (Inactive)","Jonathan Kittner"],["CertaPro of Sylvania (Inactive)","Jonathan Kittner"],["CertaPro of West San Antonio (Inactive)","Jonathan Kittner"],["CertaPro of Willamette (Inactive)","Jonathan Kittner"],["Cliff Cornell (Inactive)","Jonathan Kittner"],["Donald Rollheiser (Inactive)","Jonathan Kittner"],["Tom Thoma (Inactive)","Jonathan Kittner"],["Cary Gabel","Karri Plecko"],["CertaPro of Ann Arbor","Karri Plecko"],["CertaPro of Bartlett","Karri Plecko"],["CertaPro of Belleville IL","Karri Plecko"],["CertaPro of Bethesda-Chevy Chase","Karri Plecko"],["CertaPro of Boca Raton","Karri Plecko"],["CertaPro of Clarksville-Hopkinsville","Karri Plecko"],["CertaPro of Concord and Manchester NH","Karri Plecko"],["CertaPro of Denton","Karri Plecko"],["CertaPro of Foxborough MA","Karri Plecko"],["CertaPro of Greystone","Karri Plecko"],["CertaPro of Hendersonville TN","Karri Plecko"],["CertaPro of Katy TX","Karri Plecko"],["CertaPro of Lakeland and Winter Haven FL","Karri Plecko"],["CertaPro of Lexington SC","Karri Plecko"],["CertaPro of Port St. Lucie","Karri Plecko"],["CertaPro of Provo","Karri Plecko"],["CertaPro of St. Joseph MI","Karri Plecko"],["CertaPro of Wilmington NC","Karri Plecko"],["Chris Leary","Karri Plecko"],["Elvis Ippoliti","Karri Plecko"],["Ernest Starr","Karri Plecko"],["Gerald Bushong","Karri Plecko"],["Jeff Chin","Karri Plecko"],["Kevin Howard","Karri Plecko"],["Lisa Allardi","Karri Plecko"],["Lisa Ressler","Karri Plecko"],["Michael Fetch","Karri Plecko"],["Mike Campbell","Karri Plecko"],["Randall Kramer","Karri Plecko"],["Ray Lubesky","Karri Plecko"],["Robert Vince","Karri Plecko"],["Steven Choi","Karri Plecko"],["Tracy Moore","Karri Plecko"],["Alan Mandelbaum (Inactive)","Karri Plecko"],["CertaPro of Ahwatukee Chandler (Inactive)","Karri Plecko"],["CertaPro of Annapolis (Inactive)","Karri Plecko"],["CertaPro of El Paso (Inactive)","Karri Plecko"],["CertaPro of North Shore LA (Inactive)","Karri Plecko"],["CertaPro of San Joaquin Valley North (Inactive)","Karri Plecko"],["CertaPro of Victoria (Inactive)","Karri Plecko"],["Donald Lenehan (Inactive)","Karri Plecko"],["Edward Gutierrez (Inactive)","Karri Plecko"],["Jason Rowe (Inactive)","Karri Plecko"],["Kevin Adkins (Inactive)","Karri Plecko"],["Leisa Lundy (Inactive)","Karri Plecko"],["Mark Abel (Inactive)","Karri Plecko"],["Michael Smart (Inactive)","Karri Plecko"],["Paul Magill (Inactive)","Karri Plecko"],["Raymond Valdez (Inactive)","Karri Plecko"],["Richard Utsch (Inactive)","Karri Plecko"],["Ronald Sellers (Inactive)","Karri Plecko"],["Todd Haring (Inactive)","Karri Plecko"],["Tom Reed (Inactive)","Karri Plecko"],["CertaPro of Indianapolis and Dayton","Kieran McFadden"],["Anthony Ardizzone (Inactive)","Kieran McFadden"],["CertaPro of Dayton (Inactive)","Kieran McFadden"],["CertaPro of Melbourne FL","Kieran McFadden-CO"],["CertaPro of Orange County","Kieran McFadden-CO"],["CertaPro of San Francisco","Kieran McFadden-CO"],["Matt Hefter","Kieran McFadden-CO"],["Adrian Cox","Michael Chobanian"],["Andy Wiggins","Michael Chobanian"],["CertaPro Delaware","Michael Chobanian"],["CertaPro of Baltimore, Bel Air and Towson","Michael Chobanian"],["CertaPro of Central Arkansas","Michael Chobanian"],["CertaPro of Central Houston","Michael Chobanian"],["CertaPro of Columbia and Olney MD","Michael Chobanian"],["CertaPro of Downingtown and West Chester PA","Michael Chobanian"],["CertaPro of Germantown","Michael Chobanian"],["CertaPro of Gloucester and Salem Counties","Michael Chobanian"],["CertaPro of Middletown - Kingston","Michael Chobanian"],["CertaPro of Nashua NH and Westford MA","Michael Chobanian"],["CertaPro of Pittsburgh - South Hills","Michael Chobanian"],["CertaPro of Portland ME","Michael Chobanian"],["CertaPro of Ridgewood and Wayne","Michael Chobanian"],["CertaPro of Southern NH and Newburyport-Haverhill","Michael Chobanian"],["CertaPro of the Grand Rapids","Michael Chobanian"],["CertaPro Salt Lake City","Michael Chobanian"],["Costas","Michael Chobanian"],["Dennis Hodge","Michael Chobanian"],["Dominic Ventresca","Michael Chobanian"],["Frank Mai","Michael Chobanian"],["Hasan Dugme","Michael Chobanian"],["Jeff Ozdemir","Michael Chobanian"],["Jim LaFontaine","Michael Chobanian"],["Mark Cooper","Michael Chobanian"],["Olin Johnson","Michael Chobanian"],["Richard Webber","Michael Chobanian"],["Timothy Meade","Michael Chobanian"],["Tom Noonan","Michael Chobanian"],["Troy Hacker","Michael Chobanian"],["Bruce Kay (Inactive)","Michael Chobanian"],["CertaPro of Kalamazoo (Inactive)","Michael Chobanian"],["Ralph Schwartz (Inactive)","Michael Chobanian"],["Ted Gargano (Inactive)","Michael Chobanian"],["CertaPro of Albuquerque","Nichole Blankenship"],["CertaPro of Attleboro","Nichole Blankenship"],["CertaPro of Boise ID","Nichole Blankenship"],["CertaPro of Central Washington","Nichole Blankenship"],["CertaPro of Glen Ellyn","Nichole Blankenship"],["CertaPro of Greensboro","Nichole Blankenship"],["CertaPro of Lake Ray Hubbard TX","Nichole Blankenship"],["CertaPro of Olympia WA","Nichole Blankenship"],["CertaPro of Renton and Kent","Nichole Blankenship"],["CertaPro of Santa Monica","Nichole Blankenship"],["CertaPro of Sherman Oaks - Beverly Hills","Nichole Blankenship"],["CertaPro of Southern Maryland","Nichole Blankenship"],["CertaPro of Southern Montana","Nichole Blankenship"],["CertaPro of Southlake","Nichole Blankenship"],["CertaPro of Wichita East","Nichole Blankenship"],["CertaPro of Woodbridge VA","Nichole Blankenship"],["Dale Busic","Nichole Blankenship"],["Kevin Sullivan","Nichole Blankenship"],["Kirt Storch","Nichole Blankenship"],["Leonard Martinez","Nichole Blankenship"],["Marc Prive","Nichole Blankenship"],["Michael Goodwin","Nichole Blankenship"],["Oliver Guminski","Nichole Blankenship"],["Ottis Ballenger","Nichole Blankenship"],["Steve Jones","Nichole Blankenship"],["Steve Vertesch","Nichole Blankenship"],["William Shannon","Nichole Blankenship"],["Andrew Hoyt","Norm Murdock"],["Brendan McManus","Norm Murdock"],["CertaPro of Carlsbad","Norm Murdock"],["CertaPro of Hoover","Norm Murdock"],["CertaPro of League City and Galveston","Norm Murdock"],["CertaPro of Lexington and Louisville East","Norm Murdock"],["CertaPro of Nashville and Middle Tennessee","Norm Murdock"],["CertaPro of Needham","Norm Murdock"],["CertaPro of North San Diego","Norm Murdock"],["CertaPro of Northern AZ","Norm Murdock"],["CertaPro of Northwest Florida","Norm Murdock"],["CertaPro of Summerlin NV","Norm Murdock"],["David Messier","Norm Murdock"],["David Strahl","Norm Murdock"],["Gregg Wilde","Norm Murdock"],["Hicinbothems","Norm Murdock"],["Jim Zandee","Norm Murdock"],["Jon Ragsdale","Norm Murdock"],["Josh Soehner","Norm Murdock"],["Lee Sapata","Norm Murdock"],["Mark Potts","Norm Murdock"],["Mark Tunks","Norm Murdock"],["Matt Siebert","Norm Murdock"],["Michael Del Pellaro","Norm Murdock"],["Nathan Marmor","Norm Murdock"],["Rich Freddo","Norm Murdock"],["Steven Carey","Norm Murdock"],["Aaron Lewis","Pete Kusiak"],["CertaPro of Augusta and Columbia","Pete Kusiak"],["CertaPro of Calgary and Central Alberta","Pete Kusiak"],["CertaPro of Central IL","Pete Kusiak"],["CertaPro of Chicago Central","Pete Kusiak"],["CertaPro of Des Plaines - Chicago Northwest","Pete Kusiak"],["CertaPro of Greater Sacramento and San Joaquin Valley","Pete Kusiak"],["CertaPro of King of Prussia","Pete Kusiak"],["CertaPro of Naperville","Pete Kusiak"],["CertaPro of NE and NW San Antonio","Pete Kusiak"],["CertaPro of North Seattle","Pete Kusiak"],["CertaPro of Rhode Island","Pete Kusiak"],["CertaPro of Rock Hill Ft Mill and SW Charlotte","Pete Kusiak"],["CertaPro of Shawnee Mission","Pete Kusiak"],["CertaPro of South Charlotte","Pete Kusiak"],["CertaPro of the Main Line","Pete Kusiak"],["Gary House","Pete Kusiak"],["Gary Sabean","Pete Kusiak"],["Harold Lloyd","Pete Kusiak"],["Jack McMenamin","Pete Kusiak"],["Jake Kiser","Pete Kusiak"],["James Ploughe","Pete Kusiak"],["Jarrod Esser","Pete Kusiak"],["Jeff Dahlin","Pete Kusiak"],["John Jordan","Pete Kusiak"],["Kevin Holmberg","Pete Kusiak"],["Peter Throndson","Pete Kusiak"],["Rob Smith","Pete Kusiak"],["Scott Mitchell","Pete Kusiak"],["Steve Weiland","Pete Kusiak"],["CertaPro of Gwinnett (Inactive)","Pete Kusiak"],["Alan Phillips","Robert Warmka"],["Bill Sharp","Robert Warmka"],["Brian Brown","Robert Warmka"],["CertaPro of Arvada","Robert Warmka"],["CertaPro of Chapel Hill and Clayton-Wilson","Robert Warmka"],["CertaPro of Columbus GA","Robert Warmka"],["CertaPro of Denver and Aurora","Robert Warmka"],["CertaPro of Duluth and Norcross GA","Robert Warmka"],["CertaPro of Highlands Ranch","Robert Warmka"],["CertaPro of Hilton Head SC","Robert Warmka"],["CertaPro of Huntsville","Robert Warmka"],["CertaPro of Reno","Robert Warmka"],["CertaPro of Savannah","Robert Warmka"],["CertaPro of South Metro","Robert Warmka"],["CertaPro of Southwest Florida","Robert Warmka"],["CertaPro of Syracuse-Central NY","Robert Warmka"],["CertaPro of Twin Cities East","Robert Warmka"],["CertaPro South Denver","Robert Warmka"],["Douglas Sokolowski","Robert Warmka"],["Edwards","Robert Warmka"],["Kevin Henderson","Robert Warmka"],["Neil Covaleski","Robert Warmka"],["Nick Murray","Robert Warmka"],["Norris","Robert Warmka"],["Wes Maier","Robert Warmka"],["Columbus Commercial","Ronnie Kimble"],["Columbus Residential","Ronnie Kimble"],["Rob James","Ronnie Kimble"],["Edward Glasser (Inactive)","Ronnie Kimble"],["Phil Smith (Inactive)","Ronnie Kimble"],["CertaPro of Fairfield CT (Inactive)","Steve Kuhn"],["CertaPro of First Coast - St Augustine (Inactive)","Steve Kuhn"],["Bob Jamrog","Steven Prendes"],["CertaPro Laval","Steven Prendes"],["CertaPro of Andover","Steven Prendes"],["CertaPro of Bay Shore NY","Steven Prendes"],["CertaPro of Birmingham and Troy MI","Steven Prendes"],["CertaPro of Boynton Beach and West Palm Beach","Steven Prendes"],["CertaPro of Chesapeake and Virginia Beach VA","Steven Prendes"],["CertaPro of Durham NC","Steven Prendes"],["CertaPro of Edmonton","Steven Prendes"],["CertaPro of Hoboken","Steven Prendes"],["CertaPro of Livingston NJ","Steven Prendes"],["CertaPro of Massapequa NY","Steven Prendes"],["CertaPro of Mountainside","Steven Prendes"],["CertaPro of North Vancouver","Steven Prendes"],["CertaPro of Pittsburgh East PA","Steven Prendes"],["CertaPro of Regina","Steven Prendes"],["CertaPro of Rockville-Potomac","Steven Prendes"],["CertaPro of St. Louis County and Madison County","Steven Prendes"],["CertaPro of Staten Island","Steven Prendes"],["CertaPro of Toms River","Steven Prendes"],["CertaPro of Toronto - Forest Hills and Rosedale","Steven Prendes"],["CertaPro of Winston Salem","Steven Prendes"],["Jack Zupan","Steven Prendes"],["John Coleman","Steven Prendes"],["John Fecile","Steven Prendes"],["Peter Wilkes","Steven Prendes"],["CertaPro of Tallahassee (Inactive)","Steven Prendes"],["Robert Blanton (Inactive)","Steven Prendes"],["Brad Price","Jacob McKeever (Inactive)"],["Brett Guggenheim","Jacob McKeever (Inactive)"],["CertaPro of Alexandria","Jacob McKeever (Inactive)"],["CertaPro of East York and Don Mills","Jacob McKeever (Inactive)"],["CertaPro of Gilbert","Jacob McKeever (Inactive)"],["CertaPro of Marietta","Jacob McKeever (Inactive)"],["CertaPro of Markham ON","Jacob McKeever (Inactive)"],["CertaPro of Minnetonka","Jacob McKeever (Inactive)"],["CertaPro of North Charlotte","Jacob McKeever (Inactive)"],["CertaPro of Richmond Hill and Vaughan ON","Jacob McKeever (Inactive)"],["CertaPro of Sonoma County","Jacob McKeever (Inactive)"],["CertaPro of the Grand and Niagara","Jacob McKeever (Inactive)"],["CertaPro Painters Eastside","Jacob McKeever (Inactive)"],["Chad Joy","Jacob McKeever (Inactive)"],["Doug Bland","Jacob McKeever (Inactive)"],["Gary Lentz","Jacob McKeever (Inactive)"],["Greg Gieseler","Jacob McKeever (Inactive)"],["Jeff Spoor","Jacob McKeever (Inactive)"],["John Antioco","Jacob McKeever (Inactive)"],["John Paulik","Jacob McKeever (Inactive)"],["John Villar","Jacob McKeever (Inactive)"],["Jon Harmsen","Jacob McKeever (Inactive)"],["Jose Oller","Jacob McKeever (Inactive)"],["Louis Federico","Jacob McKeever (Inactive)"],["Mara Chambers","Jacob McKeever (Inactive)"],["Marty Maglio","Jacob McKeever (Inactive)"],["Morlocks","Jacob McKeever (Inactive)"],["Nestor Di Marco","Jacob McKeever (Inactive)"],["Oswald Diaz","Jacob McKeever (Inactive)"],["Rich Carmosino","Jacob McKeever (Inactive)"],["Robert Jacques","Jacob McKeever (Inactive)"],["Scott Abel","Jacob McKeever (Inactive)"],["Soumil Amin","Jacob McKeever (Inactive)"],["Steven Lehman","Jacob McKeever (Inactive)"],["Tom Barbour","Jacob McKeever (Inactive)"],["TR Maloney","Jacob McKeever (Inactive)"],["William Tierney","Jacob McKeever (Inactive)"],["CertaPro Frederick MD (Inactive)","Jacob McKeever (Inactive)"],["David Myers (Inactive)","Jacob McKeever (Inactive)"],["Jeff Kilinski (Inactive)","Jacob McKeever (Inactive)"],["Jim Zades (Inactive)","Jacob McKeever (Inactive)"],["Ken Mattuck (Inactive)","Jacob McKeever (Inactive)"]];
+  var FBC_LIST_STORE = "csa-prep-fbc-franchise-list-v1";
+  try{
+    var storedFbcRows = JSON.parse(window.localStorage.getItem(FBC_LIST_STORE) || "null");
+    if(Array.isArray(storedFbcRows) && storedFbcRows.length){
+      FBC_FRANCHISE_ROWS = storedFbcRows.filter(function(row){
+        return Array.isArray(row) && typeof row[0] === "string" && row[0].trim() &&
+               typeof row[1] === "string" && row[1].trim();
+      });
+    }
+  }catch(e){}
+
   var SHARED_API = "https://csa-prep-sheet.jamesehigh.chatgpt.site/api/sheets";
   var sharedId = "";
   var franchiseAccessToken = "";
@@ -562,14 +576,20 @@
   var SELECTION_STORE = "csa-prep-fbc-franchise-v1" +
     (franchiseAccessToken ? "-franchise-" + franchiseAccessToken : (sharedId ? "-" + sharedId : ""));
   var fbcMap = {};
-  FBC_FRANCHISE_ROWS.forEach(function(row){
-    var franchise = row[0], fbc = row[1];
-    if(!fbcMap[fbc]) fbcMap[fbc] = [];
-    fbcMap[fbc].push(franchise);
-  });
-  Object.keys(fbcMap).forEach(function(fbc){
-    fbcMap[fbc].sort(function(a,b){ return a.localeCompare(b); });
-  });
+  function rebuildFbcMap(){
+    fbcMap = {};
+    FBC_FRANCHISE_ROWS.forEach(function(row){
+      var franchise = String(row[0] || "").trim();
+      var fbc = String(row[1] || "").trim();
+      if(!franchise || !fbc) return;
+      if(!fbcMap[fbc]) fbcMap[fbc] = [];
+      if(fbcMap[fbc].indexOf(franchise) < 0) fbcMap[fbc].push(franchise);
+    });
+    Object.keys(fbcMap).forEach(function(fbc){
+      fbcMap[fbc].sort(function(a,b){ return a.localeCompare(b); });
+    });
+  }
+  rebuildFbcMap();
   var assignment = (function(){
     try{
       var saved = JSON.parse(ssGet(SELECTION_STORE) || "null");
@@ -631,6 +651,96 @@
     select.value = (fbcMap[assignment.fbc] || []).indexOf(assignment.franchise) >= 0 ? assignment.franchise : "";
   }
 
+  function refreshFbcMappingMenus(){
+    rebuildFbcMap();
+    var fbcSelect = document.getElementById("fbcSelect");
+    if(!fbcSelect) return;
+    fbcSelect.innerHTML = '<option value="">Select an FBC…</option>';
+    Object.keys(fbcMap).sort(function(a,b){ return a.localeCompare(b); }).forEach(function(name){
+      var option = document.createElement("option");
+      option.value = name;
+      option.textContent = name;
+      fbcSelect.appendChild(option);
+    });
+    if(!fbcMap[assignment.fbc] ||
+       (fbcMap[assignment.fbc] || []).indexOf(assignment.franchise) < 0){
+      assignment.fbc = "";
+      assignment.franchise = "";
+      saveAssignmentLocal();
+      showScopeAnswers({});
+    }
+    fbcSelect.value = assignment.fbc;
+    fillFranchises();
+    updateQuestionAccess();
+    updateFranchiseLinkUI();
+  }
+
+  function normalizeMappingHeader(value){
+    return String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  }
+
+  function importFbcFranchiseWorkbook(file){
+    if(!file) return;
+    if(typeof XLSX === "undefined"){
+      toast("Excel tools did not load. Refresh the page and try again.");
+      return;
+    }
+    var reader = new FileReader();
+    reader.onerror = function(){ toast("Could not read that Excel file"); };
+    reader.onload = function(event){
+      try{
+        var workbook = XLSX.read(event.target.result, { type:"array" });
+        if(!workbook.SheetNames.length) throw new Error("No worksheet found");
+        var rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header:1, defval:"", raw:false });
+        if(!rows.length) throw new Error("The worksheet is empty");
+        var headers = rows[0].map(normalizeMappingHeader);
+        var fbcCol = headers.indexOf("fbc");
+        if(fbcCol < 0) fbcCol = headers.indexOf("franchisebusinesscoach");
+        var franchiseCol = headers.indexOf("franchise");
+        if(fbcCol < 0 || franchiseCol < 0) throw new Error('The first row must contain "FBC" and "Franchise" columns');
+        var seen = {}, nextRows = [];
+        rows.slice(1).forEach(function(row){
+          var fbc = String(row[fbcCol] || "").trim();
+          var franchise = String(row[franchiseCol] || "").trim();
+          if(!fbc || !franchise || /^total$/i.test(fbc) || /^total$/i.test(franchise)) return;
+          var key = fbc.toLowerCase() + "\n" + franchise.toLowerCase();
+          if(seen[key]) return;
+          seen[key] = true;
+          nextRows.push([franchise, fbc]);
+        });
+        if(!nextRows.length) throw new Error("No valid FBC/franchise rows were found");
+        var fbcCount = {};
+        nextRows.forEach(function(row){ fbcCount[row[1]] = true; });
+        if(!window.confirm("Replace the current dropdown list with " + nextRows.length +
+          " franchises across " + Object.keys(fbcCount).length + " FBCs?")) return;
+        if(assignment.fbc && assignment.franchise) saveScopeLocal(assignment.fbc, assignment.franchise);
+        FBC_FRANCHISE_ROWS = nextRows;
+        window.localStorage.setItem(FBC_LIST_STORE, JSON.stringify(nextRows));
+        refreshFbcMappingMenus();
+        toast("FBC and franchise lists updated");
+      }catch(err){ toast(err && err.message ? err.message : "Could not import that Excel file"); }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function exportFbcFranchiseWorkbook(){
+    if(typeof XLSX === "undefined"){
+      toast("Excel tools did not load. Refresh the page and try again.");
+      return;
+    }
+    var exportRows = FBC_FRANCHISE_ROWS.map(function(row){
+      return { FBC:row[1], Franchise:row[0] };
+    }).sort(function(a,b){
+      return a.FBC.localeCompare(b.FBC) || a.Franchise.localeCompare(b.Franchise);
+    });
+    var sheet = XLSX.utils.json_to_sheet(exportRows, { header:["FBC","Franchise"] });
+    sheet["!cols"] = [{ wch:28 },{ wch:48 }];
+    var workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, sheet, "FBC Franchise List");
+    XLSX.writeFile(workbook, "CSA_FBC_Franchise_List_" + new Date().toISOString().slice(0,10) + ".xlsx");
+    toast("FBC and franchise list exported");
+  }
+
   function initAssignments(){
     var fbcSelect = document.getElementById("fbcSelect");
     var franchiseSelect = document.getElementById("franchiseSelect");
@@ -648,6 +758,17 @@
     franchiseSelect.addEventListener("change", function(){
       switchAssignment(assignment.fbc, franchiseSelect.value);
     });
+    var mappingFile = document.getElementById("mappingImportFile");
+    var importMappingBtn = document.getElementById("importMappingBtn");
+    var exportMappingBtn = document.getElementById("exportMappingBtn");
+    if(importMappingBtn && mappingFile){
+      importMappingBtn.addEventListener("click", function(){ mappingFile.click(); });
+      mappingFile.addEventListener("change", function(){
+        if(mappingFile.files && mappingFile.files[0]) importFbcFranchiseWorkbook(mappingFile.files[0]);
+        mappingFile.value = "";
+      });
+    }
+    if(exportMappingBtn) exportMappingBtn.addEventListener("click", exportFbcFranchiseWorkbook);
     if(franchiseAccessToken) lockFranchiseSelection();
   }
 
