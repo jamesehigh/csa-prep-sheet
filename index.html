@@ -2231,6 +2231,18 @@
       .catch(function(err){ if(popup) popup.close(); toast(err.message || "Could not open proposal"); });
   }
 
+  function deleteProposal(id, name){
+    if(!id) return;
+    if(!window.confirm('Delete "' + String(name || "this PDF") + '"? This cannot be undone.')) return;
+    fetch(PROPOSAL_API + "?action=delete&id=" + encodeURIComponent(id), {
+      method:"DELETE",
+      headers:proposalHeaders()
+    })
+      .then(function(res){ return res.json().then(function(data){ if(!res.ok) throw new Error(data.error || "Delete failed"); return data; }); })
+      .then(function(){ toast("PDF deleted"); loadProposals(); })
+      .catch(function(err){ toast(err.message || "Could not delete PDF"); });
+  }
+
   function renderFranchiseProposals(files){
     var target = document.getElementById("franchiseProposalList");
     if(!target) return;
@@ -2240,7 +2252,8 @@
         '<strong>' + esc(file.original_name) + '</strong>' +
         '<span>Job ' + esc(file.job_number) + ' · ' + esc(proposalFileSize(file.file_size)) + '</span>' +
         '<span>' + esc(proposalDate(file.uploaded_at)) + '</span>' +
-        '<button type="button" class="btn ghost" data-proposal-open="' + esc(file.id) + '">View PDF</button>' +
+        '<button type="button" class="btn ghost" data-proposal-open="' + esc(file.id) + '">View PDF</button> ' +
+        '<button type="button" class="btn danger" data-proposal-delete="' + esc(file.id) + '" data-proposal-name="' + esc(file.original_name) + '">Delete PDF</button>' +
       '</div>';
     }).join("");
   }
@@ -2274,7 +2287,8 @@
           return '<tr><td>' + esc(file.job_number) + '</td><td>' + esc(file.original_name) +
             '<br><span>' + esc(proposalFileSize(file.file_size)) + '</span></td><td>' +
             esc(proposalDate(file.uploaded_at)) + '</td><td><button type="button" class="btn ghost" data-proposal-open="' +
-            esc(file.id) + '">View PDF</button></td></tr>';
+            esc(file.id) + '">View PDF</button> <button type="button" class="btn danger" data-proposal-delete="' +
+            esc(file.id) + '" data-proposal-name="' + esc(file.original_name) + '">Delete PDF</button></td></tr>';
         }).join("") +
         '</tbody></table></section>';
     }).join("");
@@ -2336,6 +2350,11 @@
     var refreshButton = document.getElementById("proposalRefreshBtn");
     if(refreshButton) refreshButton.addEventListener("click", function(){ loadProposals(); toast("Proposal repository refreshed"); });
     document.addEventListener("click", function(event){
+      var deleteButton = event.target.closest ? event.target.closest("[data-proposal-delete]") : null;
+      if(deleteButton){
+        deleteProposal(deleteButton.getAttribute("data-proposal-delete"), deleteButton.getAttribute("data-proposal-name"));
+        return;
+      }
       var button = event.target.closest ? event.target.closest("[data-proposal-open]") : null;
       if(button) openProposal(button.getAttribute("data-proposal-open"));
     });
