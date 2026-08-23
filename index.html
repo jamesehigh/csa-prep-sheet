@@ -187,6 +187,66 @@
     .meter-right{width:100%;justify-content:flex-end;margin-right:-8px}
   }
 
+  /* ---------- Proposal repository ---------- */
+  .content-shell{max-width:920px;margin:0 auto;padding:0 20px}
+  .content-shell>.wrap{max-width:none;margin:0;padding:0 0 80px}
+  .proposal-sidebar{
+    display:none;background:#fff;border:1px solid var(--line);border-radius:12px;
+    box-shadow:var(--shadow);padding:18px;margin:0;align-self:start;position:sticky;top:16px
+  }
+  .franchise-link-view .content-shell{
+    max-width:1240px;display:grid;grid-template-columns:280px minmax(0,880px);gap:22px
+  }
+  .franchise-link-view .proposal-sidebar{display:block}
+  .proposal-sidebar h2,.proposal-repository h2{margin:0 0 5px;color:var(--navy);font-size:19px}
+  .proposal-sidebar .proposal-help,.proposal-repository .proposal-help{
+    margin:0 0 15px;color:var(--muted);font-size:13px;line-height:1.45
+  }
+  .proposal-field{margin:0 0 14px}
+  .proposal-field label{display:block;margin:0 0 6px;color:var(--navy);font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+  .proposal-field input[type="text"],.proposal-field input[type="file"]{
+    width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fcfdfe;
+    color:var(--ink);font:14px/1.4 inherit
+  }
+  .proposal-field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(29,122,196,.13)}
+  .proposal-sidebar .btn{width:100%;padding:10px 12px}
+  .proposal-status{min-height:20px;margin:10px 0 0;color:var(--muted);font-size:12.5px}
+  .proposal-status.error{color:#9b4537}
+  .proposal-mini-list{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+  .proposal-mini-list h3{margin:0 0 8px;color:var(--navy);font-size:14px}
+  .proposal-file{
+    border:1px solid #e8eef3;border-radius:8px;padding:10px;margin:0 0 8px;background:#fbfdff
+  }
+  .proposal-file strong{display:block;color:var(--ink);font-size:13px;overflow-wrap:anywhere}
+  .proposal-file span{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+  .proposal-file button{margin-top:7px;padding:5px 9px;font-size:12px}
+  .proposal-repository{
+    background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);
+    padding:22px;margin:0 0 18px
+  }
+  .franchise-link-view .proposal-repository{display:none}
+  .proposal-repository-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .proposal-repository-head .btn{padding:8px 13px}
+  .proposal-empty{padding:18px;border:1px dashed #c9d6e0;border-radius:9px;color:var(--muted);font-size:14px;text-align:center}
+  .proposal-group{border-top:1px solid var(--line);padding:15px 0 5px}
+  .proposal-group:first-child{border-top:none}
+  .proposal-group h3{margin:0 0 9px;color:var(--navy);font-size:15px}
+  .proposal-table{width:100%;border-collapse:collapse;font-size:13px}
+  .proposal-table th,.proposal-table td{padding:8px 7px;border-top:1px solid #eef2f6;text-align:left;vertical-align:top}
+  .proposal-table th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  .proposal-table td:nth-child(2){overflow-wrap:anywhere}
+  .proposal-table .btn{padding:5px 9px;font-size:12px}
+  @media(max-width:1000px){
+    .franchise-link-view .content-shell{display:block;max-width:920px}
+    .proposal-sidebar{position:static;margin:0 0 18px}
+  }
+  @media(max-width:620px){
+    .proposal-table thead{display:none}
+    .proposal-table,.proposal-table tbody,.proposal-table tr,.proposal-table td{display:block;width:100%}
+    .proposal-table tr{border-top:1px solid var(--line);padding:8px 0}
+    .proposal-table td{border:0;padding:3px 0}
+  }
+
   /* ---------- Cards ---------- */
   .card{
     background:#fff;border:1px solid var(--line);border-radius:12px;
@@ -416,7 +476,26 @@
   </div>
 </header>
 
-<div class="wrap">
+<div class="content-shell">
+  <aside class="proposal-sidebar" id="proposalSidebar" aria-labelledby="proposalUploadTitle">
+    <h2 id="proposalUploadTitle">Proposal Upload</h2>
+    <p class="proposal-help">Upload a PDF proposal for this franchise. Maximum file size: 25 MB.</p>
+    <div class="proposal-field">
+      <label for="proposalPdf">PDF Proposal</label>
+      <input type="file" id="proposalPdf" accept=".pdf,application/pdf">
+    </div>
+    <div class="proposal-field">
+      <label for="proposalJobNumber">Job Number</label>
+      <input type="text" id="proposalJobNumber" placeholder="Enter job number" autocomplete="off">
+    </div>
+    <button type="button" class="btn primary" id="proposalUploadBtn">Upload Proposal</button>
+    <p class="proposal-status" id="proposalStatus" role="status" aria-live="polite"></p>
+    <div class="proposal-mini-list">
+      <h3>Uploaded Proposals</h3>
+      <div id="franchiseProposalList"><p class="proposal-help">No proposals uploaded yet.</p></div>
+    </div>
+  </aside>
+  <div class="wrap">
   <div class="print-head" id="printHead"></div>
   <section class="assignment-card" aria-labelledby="assignmentTitle">
     <h2 id="assignmentTitle">Select the FBC and franchise</h2>
@@ -435,6 +514,16 @@
       <button type="button" class="btn ghost" id="exportMappingBtn">Export FBC/Franchise Excel</button>
     </div>
   </section>
+  <section class="proposal-repository" id="proposalRepository" aria-labelledby="proposalRepositoryTitle">
+    <div class="proposal-repository-head">
+      <div>
+        <h2 id="proposalRepositoryTitle">Proposal Repository</h2>
+        <p class="proposal-help">PDF proposals are grouped into a separate repository for each franchise.</p>
+      </div>
+      <button type="button" class="btn ghost" id="proposalRefreshBtn">Refresh Proposals</button>
+    </div>
+    <div id="masterProposalList"><div class="proposal-empty">No proposals have been uploaded.</div></div>
+  </section>
   <p class="selection-gate" id="selectionGate">Select an FBC and franchise to open Questions 1–12 and FBC Notes.</p>
   <h2 class="visually-hidden">The 12 questions</h2>
   <div id="cards"></div>
@@ -445,6 +534,7 @@
   </section>
   <section id="review" class="review" aria-live="polite" hidden=""></section>
   <p class="foot" id="foot">Answers save automatically in this browser.</p>
+  </div>
 </div>
 
 <input type="file" id="importFile" accept="application/json,.json" class="visually-hidden" aria-hidden="true" tabindex="-1">
@@ -503,6 +593,7 @@
   }catch(e){}
 
   var SHARED_API = "https://csa-prep-sheet.jamesehigh.chatgpt.site/api/sheets";
+  var PROPOSAL_API = "https://lputzmcyjpwsjrndxozr.supabase.co/functions/v1/csa-proposals-api";
   var sharedId = "";
   var franchiseAccessToken = "";
   try{
@@ -2110,6 +2201,136 @@
     }
   }
 
+  /* ---------- Proposal repository ---------- */
+  function proposalHeaders(){
+    var headers = {};
+    if(franchiseAccessToken) headers["x-franchise-token"] = franchiseAccessToken;
+    else if(sharedId) headers["x-master-sheet"] = sharedId;
+    return headers;
+  }
+
+  function proposalFileSize(bytes){
+    var n = Number(bytes) || 0;
+    return n >= 1048576 ? (n / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(n / 1024)) + " KB";
+  }
+
+  function proposalDate(value){
+    try{ return new Date(value).toLocaleString(); }catch(e){ return String(value || ""); }
+  }
+
+  function openProposal(id){
+    var popup = window.open("", "_blank");
+    fetch(PROPOSAL_API + "?action=open&id=" + encodeURIComponent(id), { headers:proposalHeaders() })
+      .then(function(res){ if(!res.ok) throw new Error("Could not open proposal"); return res.json(); })
+      .then(function(data){
+        if(!data.url) throw new Error("Could not open proposal");
+        if(popup) popup.location = data.url;
+        else window.location.href = data.url;
+      })
+      .catch(function(err){ if(popup) popup.close(); toast(err.message || "Could not open proposal"); });
+  }
+
+  function renderFranchiseProposals(files){
+    var target = document.getElementById("franchiseProposalList");
+    if(!target) return;
+    if(!files.length){ target.innerHTML = '<p class="proposal-help">No proposals uploaded yet.</p>'; return; }
+    target.innerHTML = files.map(function(file){
+      return '<div class="proposal-file">' +
+        '<strong>' + esc(file.original_name) + '</strong>' +
+        '<span>Job ' + esc(file.job_number) + ' · ' + esc(proposalFileSize(file.file_size)) + '</span>' +
+        '<span>' + esc(proposalDate(file.uploaded_at)) + '</span>' +
+        '<button type="button" class="btn ghost" data-proposal-open="' + esc(file.id) + '">View PDF</button>' +
+      '</div>';
+    }).join("");
+  }
+
+  function renderMasterProposals(files){
+    var target = document.getElementById("masterProposalList");
+    if(!target) return;
+    if(!files.length){ target.innerHTML = '<div class="proposal-empty">No proposals have been uploaded.</div>'; return; }
+    var groups = {};
+    files.forEach(function(file){
+      var key = file.fbc + "\n" + file.franchise;
+      if(!groups[key]) groups[key] = { fbc:file.fbc, franchise:file.franchise, files:[] };
+      groups[key].files.push(file);
+    });
+    target.innerHTML = Object.keys(groups).sort().map(function(key){
+      var group = groups[key];
+      return '<section class="proposal-group">' +
+        '<h3>' + esc(group.fbc) + ' — ' + esc(group.franchise) + '</h3>' +
+        '<table class="proposal-table"><thead><tr><th>Job Number</th><th>PDF Proposal</th><th>Uploaded</th><th></th></tr></thead><tbody>' +
+        group.files.map(function(file){
+          return '<tr><td>' + esc(file.job_number) + '</td><td>' + esc(file.original_name) +
+            '<br><span>' + esc(proposalFileSize(file.file_size)) + '</span></td><td>' +
+            esc(proposalDate(file.uploaded_at)) + '</td><td><button type="button" class="btn ghost" data-proposal-open="' +
+            esc(file.id) + '">View PDF</button></td></tr>';
+        }).join("") +
+        '</tbody></table></section>';
+    }).join("");
+  }
+
+  function loadProposals(){
+    if(!sharedActive()) return Promise.resolve();
+    return fetch(PROPOSAL_API, { headers:proposalHeaders() })
+      .then(function(res){ if(!res.ok) throw new Error("Could not load proposals"); return res.json(); })
+      .then(function(data){
+        var files = Array.isArray(data.files) ? data.files : [];
+        if(franchiseAccessToken) renderFranchiseProposals(files);
+        else renderMasterProposals(files);
+      })
+      .catch(function(err){
+        var status = document.getElementById("proposalStatus");
+        if(status){ status.textContent = err.message || "Could not load proposals"; status.className = "proposal-status error"; }
+      });
+  }
+
+  function uploadProposal(){
+    if(!franchiseAccessToken) return;
+    var fileInput = document.getElementById("proposalPdf");
+    var jobInput = document.getElementById("proposalJobNumber");
+    var button = document.getElementById("proposalUploadBtn");
+    var status = document.getElementById("proposalStatus");
+    var file = fileInput && fileInput.files ? fileInput.files[0] : null;
+    var jobNumber = jobInput ? jobInput.value.trim() : "";
+    if(!file){ status.textContent = "Select a PDF proposal first."; status.className = "proposal-status error"; return; }
+    if(!jobNumber){ status.textContent = "Enter the job number."; status.className = "proposal-status error"; return; }
+    if(file.type !== "application/pdf" && !/\.pdf$/i.test(file.name)){
+      status.textContent = "Only PDF proposals can be uploaded."; status.className = "proposal-status error"; return;
+    }
+    if(file.size > 26214400){
+      status.textContent = "The PDF must be 25 MB or smaller."; status.className = "proposal-status error"; return;
+    }
+    var form = new FormData();
+    form.append("file", file);
+    form.append("jobNumber", jobNumber);
+    button.disabled = true;
+    button.textContent = "Uploading…";
+    status.textContent = "Securely uploading proposal…";
+    status.className = "proposal-status";
+    fetch(PROPOSAL_API + "?action=upload", { method:"POST", headers:proposalHeaders(), body:form })
+      .then(function(res){ return res.json().then(function(data){ if(!res.ok) throw new Error(data.error || "Upload failed"); return data; }); })
+      .then(function(){
+        fileInput.value = "";
+        jobInput.value = "";
+        status.textContent = "Proposal uploaded successfully.";
+        loadProposals();
+      })
+      .catch(function(err){ status.textContent = err.message || "Upload failed"; status.className = "proposal-status error"; })
+      .finally(function(){ button.disabled = false; button.textContent = "Upload Proposal"; });
+  }
+
+  function initProposals(){
+    var uploadButton = document.getElementById("proposalUploadBtn");
+    if(uploadButton) uploadButton.addEventListener("click", uploadProposal);
+    var refreshButton = document.getElementById("proposalRefreshBtn");
+    if(refreshButton) refreshButton.addEventListener("click", function(){ loadProposals(); toast("Proposal repository refreshed"); });
+    document.addEventListener("click", function(event){
+      var button = event.target.closest ? event.target.closest("[data-proposal-open]") : null;
+      if(button) openProposal(button.getAttribute("data-proposal-open"));
+    });
+    if(sharedActive()) loadProposals();
+  }
+
   /* ---------- Toast ---------- */
   var toastTimer = null;
   function toast(msg){
@@ -2168,6 +2389,7 @@
   updateSyncUI();
   if(syncOn()){ prepId(); setTimeout(flushOutbox, 600); }
   initShared();
+  initProposals();
 })();
 </script>
 
