@@ -896,6 +896,7 @@
     if(franchiseAccessToken) lockFranchiseSelection();
     updateFranchiseLinkUI();
     updateQuestionAccess();
+    if(!franchiseAccessToken && typeof loadProposals === "function") loadProposals();
   }
 
   var assignmentSwitching = false;
@@ -2247,7 +2248,17 @@
   function renderMasterProposals(files){
     var target = document.getElementById("masterProposalList");
     if(!target) return;
-    if(!files.length){ target.innerHTML = '<div class="proposal-empty">No proposals have been uploaded.</div>'; return; }
+    if(!assignment.fbc || !assignment.franchise){
+      target.innerHTML = '<div class="proposal-empty">Select an FBC and franchise to view that franchise\'s proposal repository.</div>';
+      return;
+    }
+    files = files.filter(function(file){
+      return file.fbc === assignment.fbc && file.franchise === assignment.franchise;
+    });
+    if(!files.length){
+      target.innerHTML = '<div class="proposal-empty">No proposals have been uploaded for this FBC and franchise.</div>';
+      return;
+    }
     var groups = {};
     files.forEach(function(file){
       var key = file.fbc + "\n" + file.franchise;
