@@ -6,7 +6,7 @@ const BUCKET = "csa-proposals";
 const cors = {
   "Access-Control-Allow-Origin": "https://jamesehigh.github.io",
   "Access-Control-Allow-Headers": "content-type, x-franchise-token, x-master-sheet",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
 };
 
 function json(data: unknown, status = 200) {
@@ -101,6 +101,21 @@ Deno.serve(async (req) => {
       const signed = await admin.storage.from(BUCKET).createSignedUrl(found.data.storage_path, 300);
       if (signed.error) return json({ error: signed.error.message }, 500);
       return json({ url: signed.data.signedUrl });
+    }
+
+    if (action === "delete" && req.method === "DELETE") {
+      const id = url.searchParams.get("id") || "";
+      let query = admin.from("csa_proposal_files").select("*").eq("id", id);
+      query = scope
+        ? query.eq("sheet_id", scope.sheetId).eq("fbc", scope.fbc).eq("franchise", scope.franchise)
+        : query.eq("sheet_id", MASTER_SHEET_ID);
+      const found = await query.maybeSingle();
+      if (found.error || !found.data) return json({ error: "File not found" }, 404);
+      const removed = await admin.storage.from(BUCKET).remove([found.data.storage_path]);
+      if (removed.error) return json({ error: removed.error.message }, 500);
+      const deleted = await admin.from("csa_proposal_files").delete().eq("id", found.data.id);
+      if (deleted.error) return json({ error: deleted.error.message }, 500);
+      return json({ deleted: true, id: found.data.id });
     }
 
     let query = admin.from("csa_proposal_files")
