@@ -111,6 +111,13 @@ Deno.serve(async (req) => {
         : query.eq("sheet_id", MASTER_SHEET_ID);
       const found = await query.maybeSingle();
       if (found.error || !found.data) return json({ error: "File not found" }, 404);
+      if (master) {
+        const hidden = await admin.from("csa_proposal_files")
+          .update({ master_hidden: true })
+          .eq("id", found.data.id);
+        if (hidden.error) return json({ error: hidden.error.message }, 500);
+        return json({ hidden: true, id: found.data.id });
+      }
       const removed = await admin.storage.from(BUCKET).remove([found.data.storage_path]);
       if (removed.error) return json({ error: removed.error.message }, 500);
       const deleted = await admin.from("csa_proposal_files").delete().eq("id", found.data.id);
@@ -123,7 +130,7 @@ Deno.serve(async (req) => {
       .order("uploaded_at", { ascending: false });
     query = scope
       ? query.eq("sheet_id", scope.sheetId).eq("fbc", scope.fbc).eq("franchise", scope.franchise)
-      : query.eq("sheet_id", MASTER_SHEET_ID);
+      : query.eq("sheet_id", MASTER_SHEET_ID).eq("master_hidden", false);
     const result = await query;
     if (result.error) return json({ error: result.error.message }, 500);
     return json({ files: result.data || [] });
