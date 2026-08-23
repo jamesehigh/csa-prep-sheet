@@ -5,6 +5,13 @@
 <meta name="color-scheme" content="light only">
 <meta name="theme-color" content="#0f2f4a">
 <meta name="description" content="CSA Opportunity Prep — 12 questions to complete before a coaching or strategy conversation.">
+<script>
+  try{
+    if(new URLSearchParams(window.location.search).get("franchise")){
+      document.documentElement.classList.add("franchise-link-view");
+    }
+  }catch(e){}
+</script>
 <title>CSA Opportunity Prep — 12 Questions</title>
 <style>
   :root{
@@ -286,6 +293,7 @@
   .assignment-field select:disabled{background:#eef2f5;color:#8b9aa5;cursor:not-allowed}
   .assignment-help{grid-column:1/-1;margin:-7px 0 0;color:var(--muted);font-size:12.5px}
   .assignment-actions{grid-column:1/-1;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .franchise-link-view .assignment-actions{display:none!important}
   .assignment-actions .btn{padding:9px 15px}
 
   /* ---------- Sync ---------- */
