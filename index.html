@@ -2133,11 +2133,14 @@
     }else if((data.fbc || "") !== assignment.fbc || (data.franchise || "") !== assignment.franchise){
       return;
     }
-    if(!franchiseAccessToken && masterViewCleared()){
-      sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0);
+    var remoteUpdatedAt = Number(data.updatedAt) || 0;
+    var masterClearedAt = !franchiseAccessToken ? Number(masterViewCleared()) || 0 : 0;
+    if(masterClearedAt && remoteUpdatedAt <= masterClearedAt){
+      sharedLastUpdate = Math.max(sharedLastUpdate, remoteUpdatedAt);
       updateShareUI("Shared ✓");
       return;
     }
+    if(masterClearedAt && remoteUpdatedAt > masterClearedAt) setMasterViewCleared(false);
     var remoteClear = QUESTIONS.every(function(item){
       var value = typeof data.answers[item.n] === "string" ? data.answers[item.n]
                 : typeof data.answers[String(item.n)] === "string" ? data.answers[String(item.n)] : null;
