@@ -1001,6 +1001,7 @@
     fbcNotesEl.addEventListener("click", expandFbcNotes);
     fbcNotesEl.addEventListener("input", function(){
       answers.fbcNotes = fbcNotesEl.value;
+      sharedDirty.fbcNotes = fbcNotesEl.value;
       expandFbcNotes();
       save();
       drawReview();
@@ -1106,6 +1107,7 @@
       ta.value = (typeof answers[item.n] === "string") ? answers[item.n] : "";
       ta.addEventListener("input", function(){
         answers[item.n] = ta.value;
+        sharedDirty[item.n] = ta.value;
         save();
         refresh(item.n);
         sharedSaveSoon(item.n, ta.value);
@@ -2007,8 +2009,10 @@
 
   /* ---------- Shared-link collaboration ---------- */
   var sharedTimers = {};
+  var sharedDirty = {};
   var sharedLastUpdate = 0;
   var sharedPolling = null;
+  var proposalPolling = null;
 
   function sharedActive(){ return !!(sharedId || franchiseAccessToken); }
 
@@ -2056,15 +2060,21 @@
 
   function sharedSaveQuestion(n, value){
     if(!sharedActive()) return;
+    var sentValue = String(value || "");
     sharedRequest("PUT", {
       id:sharedId,
       fbc:assignment.fbc,
       franchise:assignment.franchise,
       question:n,
-      answer:String(value || "")
+      answer:sentValue
     })
       .then(function(res){ if(!res.ok) throw new Error("save"); return res.json(); })
-      .then(function(data){ sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0); updateShareUI("Shared ✓"); })
+      .then(function(data){
+        if(nodes[n] && nodes[n].ta.value === sentValue) delete sharedDirty[n];
+        sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0);
+        updateShareUI("Shared ✓");
+        fetchShared(false);
+      })
       .catch(function(){ updateShareUI("Save pending"); });
   }
 
@@ -2100,9 +2110,18 @@
 
   function sharedSaveAll(){
     if(!sharedActive()) return Promise.resolve();
-    return sharedRequest("POST", { id:sharedId, fbc:assignment.fbc, franchise:assignment.franchise, answers:answers })
+    var sentAnswers = JSON.parse(JSON.stringify(answers));
+    return sharedRequest("POST", { id:sharedId, fbc:assignment.fbc, franchise:assignment.franchise, answers:sentAnswers })
       .then(function(res){ if(!res.ok) throw new Error("save"); return res.json(); })
-      .then(function(data){ sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0); updateShareUI("Shared ✓"); })
+      .then(function(data){
+        QUESTIONS.forEach(function(item){
+          if(nodes[item.n] && nodes[item.n].ta.value === String(sentAnswers[item.n] || "")) delete sharedDirty[item.n];
+        });
+        if(fbcNotesEl && fbcNotesEl.value === String(sentAnswers.fbcNotes || "")) delete sharedDirty.fbcNotes;
+        sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0);
+        updateShareUI("Shared ✓");
+        fetchShared(false);
+      })
       .catch(function(){ updateShareUI("Save pending"); });
   }
 
@@ -2127,11 +2146,11 @@
     QUESTIONS.forEach(function(item){
       var incoming = typeof data.answers[item.n] === "string" ? data.answers[item.n]
                    : typeof data.answers[String(item.n)] === "string" ? data.answers[String(item.n)] : "";
-      if(!remoteClear && document.activeElement === nodes[item.n].ta) return;
+      if(!remoteClear && Object.prototype.hasOwnProperty.call(sharedDirty, item.n)) return;
       answers[item.n] = incoming;
       nodes[item.n].ta.value = incoming;
     });
-    if(remoteClear || document.activeElement !== fbcNotesEl){
+    if(remoteClear || !Object.prototype.hasOwnProperty.call(sharedDirty, "fbcNotes")){
       answers.fbcNotes = typeof data.answers.fbcNotes === "string" ? data.answers.fbcNotes : "";
       if(fbcNotesEl){ fbcNotesEl.value = answers.fbcNotes; collapseFbcNotes(); }
     }
@@ -2171,7 +2190,7 @@
     updateShareUI("Creating link…");
     sharedSaveAll().then(function(){
       copyString(sharedUrl(), "Shared link created and copied");
-      if(!sharedPolling) sharedPolling = setInterval(function(){ fetchShared(false); }, 2000);
+      if(!sharedPolling) sharedPolling = setInterval(function(){ fetchShared(false); }, 1000);
     });
   }
 
@@ -2230,7 +2249,7 @@
     if(franchiseAccessToken) lockFranchiseSelection();
     if(sharedActive()){
       fetchShared(true);
-      sharedPolling = setInterval(function(){ fetchShared(false); }, 2000);
+      sharedPolling = setInterval(function(){ fetchShared(false); }, 1000);
     }
   }
 
@@ -2395,7 +2414,10 @@
       var button = event.target.closest ? event.target.closest("[data-proposal-open]") : null;
       if(button) openProposal(button.getAttribute("data-proposal-open"));
     });
-    if(sharedActive()) loadProposals();
+    if(sharedActive()){
+      loadProposals();
+      proposalPolling = setInterval(function(){ loadProposals(); }, 2000);
+    }
   }
 
   /* ---------- Toast ---------- */
@@ -2431,7 +2453,15 @@
   window.addEventListener("beforeunload", function(){ saveNow(); });
   document.addEventListener("visibilitychange", function(){
     if(document.visibilityState === "hidden"){ saveNow(); flushPendingTyping(); }
-    else flushOutbox();
+    else{
+      flushOutbox();
+      fetchShared(true);
+      loadProposals();
+    }
+  });
+  window.addEventListener("focus", function(){
+    fetchShared(false);
+    loadProposals();
   });
 
   /* ---------- Sync boot ---------- */
