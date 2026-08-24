@@ -2421,23 +2421,43 @@
     if(file.size > 26214400){
       status.textContent = "The PDF must be 25 MB or smaller."; status.className = "proposal-status error"; return;
     }
-    var form = new FormData();
-    form.append("file", file);
-    form.append("jobNumber", jobNumber);
     button.disabled = true;
     button.textContent = "Uploading…";
     status.textContent = "Securely uploading proposal…";
     status.className = "proposal-status";
-    fetch(PROPOSAL_API + "?action=upload", { method:"POST", headers:proposalHeaders(), body:form })
-      .then(function(res){ return res.json().then(function(data){ if(!res.ok) throw new Error(data.error || "Upload failed"); return data; }); })
-      .then(function(){
-        fileInput.value = "";
-        jobInput.value = "";
-        status.textContent = "Proposal uploaded successfully.";
-        loadProposals();
+    var reader = new FileReader();
+    reader.onerror = function(){
+      status.textContent = "The PDF could not be read.";
+      status.className = "proposal-status error";
+      button.disabled = false;
+      button.textContent = "Upload Proposal";
+    };
+    reader.onload = function(){
+      var encoded = String(reader.result || "");
+      var comma = encoded.indexOf(",");
+      var headers = proposalHeaders();
+      headers["Content-Type"] = "application/json";
+      fetch(PROPOSAL_API + "?action=upload", {
+        method:"POST",
+        headers:headers,
+        body:JSON.stringify({
+          jobNumber:jobNumber,
+          fileName:file.name,
+          fileType:file.type || "application/pdf",
+          fileBase64:comma >= 0 ? encoded.slice(comma + 1) : encoded
+        })
       })
-      .catch(function(err){ status.textContent = err.message || "Upload failed"; status.className = "proposal-status error"; })
-      .finally(function(){ button.disabled = false; button.textContent = "Upload Proposal"; });
+        .then(function(res){ return res.json().then(function(data){ if(!res.ok) throw new Error(data.error || "Upload failed"); return data; }); })
+        .then(function(){
+          fileInput.value = "";
+          jobInput.value = "";
+          status.textContent = "Proposal uploaded successfully.";
+          loadProposals();
+        })
+        .catch(function(err){ status.textContent = err.message || "Upload failed"; status.className = "proposal-status error"; })
+        .finally(function(){ button.disabled = false; button.textContent = "Upload Proposal"; });
+    };
+    reader.readAsDataURL(file);
   }
 
   function initProposals(){
