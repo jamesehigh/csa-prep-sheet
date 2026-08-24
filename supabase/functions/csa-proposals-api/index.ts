@@ -4,7 +4,7 @@ const SHEET_API = "https://csa-prep-sheet.jamesehigh.chatgpt.site/api/sheets";
 const MASTER_SHEET_ID = "5444dfa0-e19c-42d1-8f40-4f97a2382c76";
 const BUCKET = "csa-proposals";
 const cors = {
-  "Access-Control-Allow-Origin": "https://jamesehigh.github.io",
+  "Access-Control-Allow-Origin": "https://fbc-master-prep.github.io",
   "Access-Control-Allow-Headers": "content-type, x-franchise-token, x-master-sheet",
   "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
 };
