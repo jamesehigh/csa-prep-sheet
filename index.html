@@ -712,11 +712,11 @@
     return (sharedId || PRIMARY_SHARED_ID) + "::" + encodeURIComponent(assignment.fbc || "") + "::" + encodeURIComponent(assignment.franchise || "");
   }
   function masterViewCleared(){
-    if(franchiseAccessToken || !assignment.fbc || !assignment.franchise) return false;
+    if(franchiseAccessToken || !assignment.fbc || !assignment.franchise) return 0;
     try{
       var cleared = JSON.parse(lsGet(MASTER_VIEW_CLEAR_STORE) || "{}");
-      return !!cleared[masterViewClearKey()];
-    }catch(e){ return false; }
+      return Number(cleared[masterViewClearKey()]) || 0;
+    }catch(e){ return 0; }
   }
   function setMasterViewCleared(value){
     if(franchiseAccessToken || !assignment.fbc || !assignment.franchise) return;
@@ -1590,6 +1590,7 @@
       if(sharedTimers[key]) clearTimeout(sharedTimers[key]);
     });
     sharedTimers = {};
+    sharedDirty = {};
     QUESTIONS.forEach(function(item){ answers[item.n] = ""; });
     answers.fbcNotes = "";
     saveNow();
