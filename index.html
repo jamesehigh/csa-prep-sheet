@@ -1586,11 +1586,7 @@
       : "Clear all 12 answers and start over?";
     if(!window.confirm(prompt)) return;
     if(saveTimer){ clearTimeout(saveTimer); saveTimer = null; }
-    Object.keys(sharedTimers).forEach(function(key){
-      if(sharedTimers[key]) clearTimeout(sharedTimers[key]);
-    });
-    sharedTimers = {};
-    sharedDirty = {};
+    cancelPendingSharedSaves();
     QUESTIONS.forEach(function(item){ answers[item.n] = ""; });
     answers.fbcNotes = "";
     saveNow();
@@ -2029,6 +2025,15 @@
   var sharedLastUpdate = 0;
   var sharedPolling = null;
   var proposalPolling = null;
+  var MASTER_CLEAR_SETTLE_MS = 10000;
+
+  function cancelPendingSharedSaves(){
+    Object.keys(sharedTimers).forEach(function(key){
+      if(sharedTimers[key]) clearTimeout(sharedTimers[key]);
+    });
+    sharedTimers = {};
+    sharedDirty = {};
+  }
 
   function sharedActive(){ return !!(sharedId || franchiseAccessToken); }
 
@@ -2150,22 +2155,28 @@
       return;
     }
     var remoteUpdatedAt = Number(data.updatedAt) || 0;
-    var masterClearedAt = !franchiseAccessToken
-      ? Math.max(Number(data.masterClearedAt) || 0, Number(masterViewCleared()) || 0)
-      : 0;
-    if(masterClearedAt && remoteUpdatedAt <= masterClearedAt){
+    var serverMasterClearedAt = !franchiseAccessToken ? Number(data.masterClearedAt) || 0 : 0;
+    var localMasterClearedAt = !franchiseAccessToken ? Number(masterViewCleared()) || 0 : 0;
+    var masterClearedAt = Math.max(serverMasterClearedAt, localMasterClearedAt);
+    /* A different Master window may already have a debounced or in-flight save
+       when Start Over is pressed. That stale write can land just after the
+       server's clear marker. Absorb those late writes into the clear instead
+       of treating them as a new Franchise Link response. */
+    var lateMasterWrite = masterClearedAt && remoteUpdatedAt > masterClearedAt &&
+      remoteUpdatedAt - masterClearedAt <= MASTER_CLEAR_SETTLE_MS;
+    if(masterClearedAt && (remoteUpdatedAt <= masterClearedAt || lateMasterWrite)){
+      cancelPendingSharedSaves();
       QUESTIONS.forEach(function(item){
         answers[item.n] = "";
         nodes[item.n].ta.value = "";
       });
       answers.fbcNotes = "";
       if(fbcNotesEl){ fbcNotesEl.value = ""; collapseFbcNotes(); }
-      sharedDirty = {};
       saveNow();
       saveScopeLocal(assignment.fbc, assignment.franchise);
       refreshAll();
       drawReview();
-      setMasterViewCleared(masterClearedAt);
+      setMasterViewCleared(Math.max(masterClearedAt, remoteUpdatedAt));
       sharedLastUpdate = Math.max(sharedLastUpdate, remoteUpdatedAt);
       updateShareUI("Shared ✓");
       return;
