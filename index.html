@@ -1620,17 +1620,15 @@
 
     if(sharedRecord){
       sharedRequest("POST", {
-        id:sharedId,
-        fbc:assignment.fbc,
-        franchise:assignment.franchise,
-        answers:answers
+        action:"franchiseClear"
       }).then(function(res){ if(!res.ok) throw new Error("clear"); return res.json(); })
         .then(function(data){
           sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0);
           updateShareUI("Shared ✓");
-          toast(franchiseAccessToken ? "Your answers were cleared" : "Cleared");
+          fetchShared(false);
+          toast("Your answers were cleared");
         })
-        .catch(function(){ updateShareUI("Clear pending"); toast("Cleared here — shared clear is pending"); });
+        .catch(function(){ updateShareUI("Clear pending"); toast("Could not clear your shared answers"); });
       return;
     }
 
@@ -2351,7 +2349,7 @@
         '<span>Job ' + esc(file.job_number) + ' · ' + esc(proposalFileSize(file.file_size)) + '</span>' +
         '<span>' + esc(proposalDate(file.uploaded_at)) + '</span>' +
         '<button type="button" class="btn ghost" data-proposal-open="' + esc(file.id) + '">View PDF</button> ' +
-        '<button type="button" class="btn danger" data-proposal-delete="' + esc(file.id) + '" data-proposal-name="' + esc(file.original_name) + '">Delete PDF</button>' +
+        '<button type="button" class="btn danger" data-proposal-delete="' + esc(file.id) + '" data-proposal-name="' + esc(file.original_name) + '">Delete Proposal</button>' +
       '</div>';
     }).join("");
   }
@@ -2386,7 +2384,7 @@
             '<br><span>' + esc(proposalFileSize(file.file_size)) + '</span></td><td>' +
             esc(proposalDate(file.uploaded_at)) + '</td><td><button type="button" class="btn ghost" data-proposal-open="' +
             esc(file.id) + '">View PDF</button> <button type="button" class="btn danger" data-proposal-delete="' +
-            esc(file.id) + '" data-proposal-name="' + esc(file.original_name) + '">Delete PDF</button></td></tr>';
+            esc(file.id) + '" data-proposal-name="' + esc(file.original_name) + '">Delete Proposal</button></td></tr>';
         }).join("") +
         '</tbody></table></section>';
     }).join("");
