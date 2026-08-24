@@ -723,7 +723,7 @@
     try{
       var cleared = JSON.parse(lsGet(MASTER_VIEW_CLEAR_STORE) || "{}");
       if(!cleared || typeof cleared !== "object" || Array.isArray(cleared)) cleared = {};
-      if(value) cleared[masterViewClearKey()] = Date.now();
+      if(value) cleared[masterViewClearKey()] = typeof value === "number" ? value : Date.now();
       else delete cleared[masterViewClearKey()];
       lsSet(MASTER_VIEW_CLEAR_STORE, JSON.stringify(cleared));
     }catch(e){}
@@ -1603,7 +1603,22 @@
     if(sharedRecord && !franchiseAccessToken){
       setMasterViewCleared(true);
       saveScopeLocal(assignment.fbc, assignment.franchise);
-      toast("Cleared from Master view; Franchise Link answers preserved");
+      updateShareUI("Clearing Master view…");
+      sharedRequest("POST", {
+        action:"masterClear",
+        id:sharedId,
+        fbc:assignment.fbc,
+        franchise:assignment.franchise
+      }).then(function(res){ if(!res.ok) throw new Error("clear"); return res.json(); })
+        .then(function(data){
+          setMasterViewCleared(Number(data.masterClearedAt) || true);
+          updateShareUI("Shared ✓");
+          toast("Cleared from every Master view; Franchise Link answers preserved");
+        })
+        .catch(function(){
+          updateShareUI("Clear pending");
+          toast("Cleared here — shared Master clear is pending");
+        });
       return;
     }
 
@@ -2135,8 +2150,22 @@
       return;
     }
     var remoteUpdatedAt = Number(data.updatedAt) || 0;
-    var masterClearedAt = !franchiseAccessToken ? Number(masterViewCleared()) || 0 : 0;
+    var masterClearedAt = !franchiseAccessToken
+      ? Math.max(Number(data.masterClearedAt) || 0, Number(masterViewCleared()) || 0)
+      : 0;
     if(masterClearedAt && remoteUpdatedAt <= masterClearedAt){
+      QUESTIONS.forEach(function(item){
+        answers[item.n] = "";
+        nodes[item.n].ta.value = "";
+      });
+      answers.fbcNotes = "";
+      if(fbcNotesEl){ fbcNotesEl.value = ""; collapseFbcNotes(); }
+      sharedDirty = {};
+      saveNow();
+      saveScopeLocal(assignment.fbc, assignment.franchise);
+      refreshAll();
+      drawReview();
+      setMasterViewCleared(masterClearedAt);
       sharedLastUpdate = Math.max(sharedLastUpdate, remoteUpdatedAt);
       updateShareUI("Shared ✓");
       return;
