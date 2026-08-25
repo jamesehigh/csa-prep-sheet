@@ -2205,13 +2205,23 @@
     QUESTIONS.forEach(function(item){
       var incoming = typeof data.answers[item.n] === "string" ? data.answers[item.n]
                    : typeof data.answers[String(item.n)] === "string" ? data.answers[String(item.n)] : "";
-      if(!remoteClear && Object.prototype.hasOwnProperty.call(sharedDirty, item.n)) return;
+      /* Polling must never rewrite the textarea under the user's cursor. Even
+         assigning the same value resets the selection in some browsers and
+         makes typing look jumpy. Keep the active local edit authoritative;
+         blur/input saving will publish it normally. A deliberate remote clear
+         still wins so Start Over continues to update every open copy. */
+      var activelyEditing = nodes[item.n] && document.activeElement === nodes[item.n].ta;
+      if(!remoteClear && (activelyEditing || Object.prototype.hasOwnProperty.call(sharedDirty, item.n))) return;
       answers[item.n] = incoming;
-      nodes[item.n].ta.value = incoming;
+      if(nodes[item.n].ta.value !== incoming) nodes[item.n].ta.value = incoming;
     });
-    if(remoteClear || !Object.prototype.hasOwnProperty.call(sharedDirty, "fbcNotes")){
+    var notesEditing = fbcNotesEl && document.activeElement === fbcNotesEl;
+    if(remoteClear || (!notesEditing && !Object.prototype.hasOwnProperty.call(sharedDirty, "fbcNotes"))){
       answers.fbcNotes = typeof data.answers.fbcNotes === "string" ? data.answers.fbcNotes : "";
-      if(fbcNotesEl){ fbcNotesEl.value = answers.fbcNotes; collapseFbcNotes(); }
+      if(fbcNotesEl){
+        if(fbcNotesEl.value !== answers.fbcNotes) fbcNotesEl.value = answers.fbcNotes;
+        collapseFbcNotes();
+      }
     }
     sharedLastUpdate = Math.max(sharedLastUpdate, Number(data.updatedAt) || 0);
     saveNow();
